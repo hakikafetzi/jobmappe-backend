@@ -41,7 +41,7 @@ public class JobPosting {
     @Column(name = "status", nullable = false)
     private JobPostingStatus status;
 
-    @Column(name = "published_at", nullable = false)
+    @Column(name = "published_at")
     private LocalDate publishedAt;
 
     @CreationTimestamp

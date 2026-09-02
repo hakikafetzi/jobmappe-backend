@@ -25,7 +25,7 @@ public class JobPostingMapperImpl implements JobPostingMapper {
                 jobPosting.getUrl(),
                 jobPosting.getStatus(),
                 jobPosting.getPublishedAt(),
-                companyMapper.toCompactDto(jobPosting.getCompany())
+                companyMapper.toDto(jobPosting.getCompany())
         );
     }
 

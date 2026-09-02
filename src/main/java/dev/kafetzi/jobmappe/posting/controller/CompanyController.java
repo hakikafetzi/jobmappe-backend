@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.posting.controller;
 
+import dev.kafetzi.jobmappe.posting.model.dto.CompactCompanyDto;
 import dev.kafetzi.jobmappe.posting.model.dto.CompanyResponseDto;
 import dev.kafetzi.jobmappe.posting.model.dto.CompanyRequestDto;
 import dev.kafetzi.jobmappe.posting.service.CompanyService;
@@ -35,9 +36,9 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<CompanyResponseDto> createCompany(
+    public ResponseEntity<CompactCompanyDto> createCompany(
             @Valid @RequestBody CompanyRequestDto companyRequestDto) {
-        CompanyResponseDto company = companyService.createCompany(companyRequestDto);
+        CompactCompanyDto company = companyService.createCompany(companyRequestDto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -49,11 +50,11 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompanyResponseDto> updateCompany(
+    public ResponseEntity<CompactCompanyDto> updateCompany(
             @PathVariable UUID id,
             @Valid @RequestBody CompanyRequestDto companyRequestDto
     ){
-        CompanyResponseDto company = companyService.updateCompany(id, companyRequestDto);
+        CompactCompanyDto company = companyService.updateCompany(id, companyRequestDto);
 
         return ResponseEntity.ok(company);
     }

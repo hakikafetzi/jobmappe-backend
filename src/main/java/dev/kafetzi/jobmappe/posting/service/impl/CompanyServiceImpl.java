@@ -2,58 +2,76 @@ package dev.kafetzi.jobmappe.posting.service.impl;
 
 import dev.kafetzi.jobmappe.posting.mapper.CompanyMapper;
 import dev.kafetzi.jobmappe.posting.model.Company;
+import dev.kafetzi.jobmappe.posting.model.dto.CompactCompanyDto;
 import dev.kafetzi.jobmappe.posting.model.dto.CompanyRequestDto;
 import dev.kafetzi.jobmappe.posting.model.dto.CompanyResponseDto;
 import dev.kafetzi.jobmappe.posting.repository.CompanyRepository;
+import dev.kafetzi.jobmappe.posting.repository.JobPostingRepository;
 import dev.kafetzi.jobmappe.posting.service.CompanyService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final JobPostingRepository jobPostingRepository;
     private final CompanyMapper companyMapper;
 
     @Override
     public List<CompanyResponseDto> getCompanies() {
-        return companyRepository.findAllWithJobPostings()
+        List<Company> companies = companyRepository.findAll();
+
+        Map<UUID, Long> jobCountsByCompanyId = jobPostingRepository.countJobPostingsPerCompany()
                 .stream()
-                .map(companyMapper::toDto)
+                .collect(Collectors.toMap(
+                        row -> (UUID) row[0],
+                        row -> (Long) row[1]
+                ));
+
+        return companies.stream()
+                .map(company -> {
+                    long jobCount = jobCountsByCompanyId.getOrDefault(company.getId(), 0L);
+                    return companyMapper.toDto(company, (int) jobCount);
+                })
                 .toList();
     }
 
     @Override
     public CompanyResponseDto getCompany(UUID id) {
-        Company company = companyRepository.findByIdWithJobPostings(id)
+        Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + id));
 
-        return companyMapper.toDto(company);
+        int jobCount = (int) jobPostingRepository.countJobPostingsByCompanyId(company.getId());
+
+        return companyMapper.toDto(company, jobCount);
     }
 
     @Override
     @Transactional
-    public CompanyResponseDto createCompany(CompanyRequestDto requestDto) {
+    public CompactCompanyDto createCompany(CompanyRequestDto requestDto) {
         Company company = companyMapper.toEntity(requestDto);
 
         if(companyRepository.existsByNameIgnoreCase(company.getName())){
             throw new IllegalArgumentException("Company already exists with name " + company.getName());
         }
 
-        Company updatedCompany = companyRepository.save(company);
+        Company newCompany = companyRepository.save(company);
 
-        return companyMapper.toDto(updatedCompany);
+        return companyMapper.toDto(newCompany);
     }
 
     @Override
     @Transactional
-    public CompanyResponseDto updateCompany(UUID id, CompanyRequestDto requestDto) {
-        Company company = companyRepository.findByIdWithJobPostings(id)
+    public CompactCompanyDto updateCompany(UUID id, CompanyRequestDto requestDto) {
+        Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Company not found with id " + id));
 
         companyMapper.updateEntityFromDto(requestDto, company);

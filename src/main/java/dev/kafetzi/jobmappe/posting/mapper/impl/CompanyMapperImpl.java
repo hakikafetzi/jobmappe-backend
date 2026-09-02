@@ -11,12 +11,21 @@ import org.springframework.stereotype.Component;
 public class CompanyMapperImpl implements CompanyMapper {
 
     @Override
-    public CompanyResponseDto toDto(Company company) {
+    public CompanyResponseDto toDto(Company company, int jobCount) {
         return new CompanyResponseDto(
                 company.getId(),
                 company.getName(),
                 company.getWebsite(),
-                company.getJobPostings().size()
+                jobCount
+        );
+    }
+
+    @Override
+    public CompactCompanyDto toDto(Company company) {
+        return new CompactCompanyDto(
+                company.getId(),
+                company.getName(),
+                company.getWebsite()
         );
     }
 
@@ -35,14 +44,5 @@ public class CompanyMapperImpl implements CompanyMapper {
 
         company.setName(companyRequestDto.name());
         company.setWebsite(companyRequestDto.website());
-    }
-
-    @Override
-    public CompactCompanyDto toCompactDto(Company company) {
-        return new CompactCompanyDto(
-                company.getId(),
-                company.getName(),
-                company.getWebsite()
-        );
     }
 }

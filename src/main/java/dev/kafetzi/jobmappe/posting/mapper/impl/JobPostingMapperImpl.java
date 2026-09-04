@@ -3,9 +3,10 @@ package dev.kafetzi.jobmappe.posting.mapper.impl;
 import dev.kafetzi.jobmappe.posting.mapper.CompanyMapper;
 import dev.kafetzi.jobmappe.posting.mapper.JobPostingMapper;
 import dev.kafetzi.jobmappe.posting.model.JobPosting;
+import dev.kafetzi.jobmappe.posting.model.dto.JobPostingCompactDto;
+import dev.kafetzi.jobmappe.posting.model.dto.JobPostingDetailDto;
 import dev.kafetzi.jobmappe.posting.model.dto.JobPostingRequestDto;
 import dev.kafetzi.jobmappe.posting.model.dto.JobPostingResponseDto;
-import dev.kafetzi.jobmappe.posting.model.dto.JobPostingWithoutCompanyResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +25,7 @@ public class JobPostingMapperImpl implements JobPostingMapper {
                 jobPosting.getLocation(),
                 jobPosting.getUrl(),
                 jobPosting.getStatus(),
-                jobPosting.getPublishedAt(),
-                companyMapper.toDto(jobPosting.getCompany())
+                jobPosting.getPublishedAt()
         );
     }
 
@@ -44,15 +44,28 @@ public class JobPostingMapperImpl implements JobPostingMapper {
     }
 
     @Override
-    public JobPostingWithoutCompanyResponseDto toDtoWithoutCompany(JobPosting jobPosting) {
-        return new JobPostingWithoutCompanyResponseDto(
+    public JobPostingDetailDto toDetailDto(JobPosting jobPosting) {
+        return new JobPostingDetailDto(
                 jobPosting.getId(),
+                companyMapper.toDto(jobPosting.getCompany()),
                 jobPosting.getTitle(),
                 jobPosting.getDescription(),
                 jobPosting.getLocation(),
                 jobPosting.getUrl(),
                 jobPosting.getStatus(),
-                jobPosting.getPublishedAt()
+                jobPosting.getPublishedAt(),
+                jobPosting.getCreatedAt()
+        );
+    }
+
+    @Override
+    public JobPostingCompactDto toCompactDto(JobPosting jobPosting) {
+        return new JobPostingCompactDto(
+                jobPosting.getId(),
+                jobPosting.getTitle(),
+                jobPosting.getCompany().getName(),
+                jobPosting.getLocation(),
+                jobPosting.getCreatedAt()
         );
     }
 

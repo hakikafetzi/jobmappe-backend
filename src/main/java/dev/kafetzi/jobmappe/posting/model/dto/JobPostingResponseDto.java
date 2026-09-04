@@ -12,7 +12,6 @@ public record JobPostingResponseDto(
         String location,
         String url,
         JobPostingStatus status,
-        LocalDate publishedAt,
-        CompactCompanyDto company
+        LocalDate publishedAt
 ) {
 }

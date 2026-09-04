@@ -1,8 +1,6 @@
 package dev.kafetzi.jobmappe.posting.controller;
 
-import dev.kafetzi.jobmappe.posting.model.dto.JobPostingRequestDto;
-import dev.kafetzi.jobmappe.posting.model.dto.JobPostingResponseDto;
-import dev.kafetzi.jobmappe.posting.model.dto.JobPostingWithoutCompanyResponseDto;
+import dev.kafetzi.jobmappe.posting.model.dto.*;
 import dev.kafetzi.jobmappe.posting.service.JobPostingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,15 +18,15 @@ public class JobPostingController {
     private final JobPostingService jobPostingService;
 
     @GetMapping("/api/job-postings")
-    public ResponseEntity<List<JobPostingResponseDto>> getAllJobPostings() {
-        List<JobPostingResponseDto> jobPostingResponseDtos = jobPostingService.getAllJobPostings();
+    public ResponseEntity<List<JobPostingCompactDto>> getAllJobPostings() {
+        List<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostings();
 
-        return ResponseEntity.ok(jobPostingResponseDtos);
+        return ResponseEntity.ok(jobPostings);
     }
 
     @GetMapping("/api/job-postings/{id}")
-    public ResponseEntity<JobPostingResponseDto> getJobPosting(@PathVariable UUID id) {
-        JobPostingResponseDto jobPosting = jobPostingService.getJobPosting(id);
+    public ResponseEntity<JobPostingDetailDto> getJobPosting(@PathVariable UUID id) {
+        JobPostingDetailDto jobPosting = jobPostingService.getJobPosting(id);
 
         return ResponseEntity.ok(jobPosting);
     }
@@ -60,10 +58,10 @@ public class JobPostingController {
     }
 
     @GetMapping("/api/companies/{companyId}/job-postings")
-    public ResponseEntity<List<JobPostingWithoutCompanyResponseDto>> getAllJobPostingsByCompany(
+    public ResponseEntity<List<JobPostingCompactDto>> getAllJobPostingsByCompany(
             @PathVariable UUID companyId
     ) {
-        List<JobPostingWithoutCompanyResponseDto> jobPostings = jobPostingService.getAllJobPostingsByCompanyId(companyId);
+        List<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostingsByCompanyId(companyId);
 
         return ResponseEntity.ok(jobPostings);
     }

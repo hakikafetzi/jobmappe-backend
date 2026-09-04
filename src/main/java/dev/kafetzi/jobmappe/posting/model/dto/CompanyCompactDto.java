@@ -2,9 +2,9 @@ package dev.kafetzi.jobmappe.posting.model.dto;
 
 import java.util.UUID;
 
-public record CompactCompanyDto(
+public record CompanyCompactDto(
         UUID id,
         String name,
-        String website
+        long jobsCount
 ) {
 }

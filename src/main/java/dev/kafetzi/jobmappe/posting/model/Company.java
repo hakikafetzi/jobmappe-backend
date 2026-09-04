@@ -26,6 +26,15 @@ public class Company {
     @Column(name = "website")
     private String website;
 
+    @Column(name = "street")
+    private String street;
+
+    @Column(name = "postal_code")
+    private String postalCode;
+
+    @Column(name = "city")
+    private String city;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

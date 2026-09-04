@@ -3,9 +3,7 @@ package dev.kafetzi.jobmappe.posting.service.impl;
 import dev.kafetzi.jobmappe.posting.mapper.JobPostingMapper;
 import dev.kafetzi.jobmappe.posting.model.Company;
 import dev.kafetzi.jobmappe.posting.model.JobPosting;
-import dev.kafetzi.jobmappe.posting.model.dto.JobPostingRequestDto;
-import dev.kafetzi.jobmappe.posting.model.dto.JobPostingResponseDto;
-import dev.kafetzi.jobmappe.posting.model.dto.JobPostingWithoutCompanyResponseDto;
+import dev.kafetzi.jobmappe.posting.model.dto.*;
 import dev.kafetzi.jobmappe.posting.repository.CompanyRepository;
 import dev.kafetzi.jobmappe.posting.repository.JobPostingRepository;
 import dev.kafetzi.jobmappe.posting.service.JobPostingService;
@@ -25,10 +23,10 @@ public class JobPostingServiceImpl implements JobPostingService {
     private final JobPostingMapper jobPostingMapper;
 
     @Override
-    public List<JobPostingResponseDto> getAllJobPostings() {
+    public List<JobPostingCompactDto> getAllJobPostings() {
         return jobPostingRepository.findAllWithCompany()
                 .stream()
-                .map(jobPostingMapper::toDto)
+                .map(jobPostingMapper::toCompactDto)
                 .toList();
     }
 
@@ -47,29 +45,30 @@ public class JobPostingServiceImpl implements JobPostingService {
     }
 
     @Override
-    public JobPostingResponseDto getJobPosting(UUID postingId) {
+    public JobPostingDetailDto getJobPosting(UUID postingId) {
         JobPosting jobPosting = jobPostingRepository.findByIdWithCompany(postingId)
                 .orElseThrow(() -> new IllegalArgumentException("Job posting with id: " + postingId + " not found"));
 
-        return jobPostingMapper.toDto(jobPosting);
-    }
 
-    @Override
-    public List<JobPostingWithoutCompanyResponseDto> getAllJobPostingsByCompanyId(UUID companyId) {
-        return jobPostingRepository.findAllByCompanyId(companyId)
-                .stream()
-                .map(jobPostingMapper::toDtoWithoutCompany)
-                .toList();
+        return jobPostingMapper.toDetailDto(jobPosting);
     }
 
     @Override
     @Transactional
     public JobPostingResponseDto updateJobPosting(UUID id, JobPostingRequestDto jobPostingRequestDto) {
-        JobPosting jobPosting = jobPostingRepository.findByIdWithCompany(id)
+        JobPosting jobPosting = jobPostingRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Job posting with id: " + id + " not found"));
 
         jobPostingMapper.updateEntityFromDto(jobPostingRequestDto, jobPosting);
 
         return jobPostingMapper.toDto(jobPosting);
+    }
+
+    @Override
+    public List<JobPostingCompactDto> getAllJobPostingsByCompanyId(UUID companyId) {
+        return jobPostingRepository.findAllByCompanyId(companyId)
+                .stream()
+                .map(jobPostingMapper::toCompactDto)
+                .toList();
     }
 }

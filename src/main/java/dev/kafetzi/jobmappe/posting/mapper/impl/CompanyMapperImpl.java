@@ -2,7 +2,8 @@ package dev.kafetzi.jobmappe.posting.mapper.impl;
 
 import dev.kafetzi.jobmappe.posting.mapper.CompanyMapper;
 import dev.kafetzi.jobmappe.posting.model.Company;
-import dev.kafetzi.jobmappe.posting.model.dto.CompactCompanyDto;
+import dev.kafetzi.jobmappe.posting.model.dto.CompanyCompactDto;
+import dev.kafetzi.jobmappe.posting.model.dto.CompanyDetailDto;
 import dev.kafetzi.jobmappe.posting.model.dto.CompanyResponseDto;
 import dev.kafetzi.jobmappe.posting.model.dto.CompanyRequestDto;
 import org.springframework.stereotype.Component;
@@ -11,21 +12,36 @@ import org.springframework.stereotype.Component;
 public class CompanyMapperImpl implements CompanyMapper {
 
     @Override
-    public CompanyResponseDto toDto(Company company, int jobCount) {
+    public CompanyResponseDto toDto(Company company) {
         return new CompanyResponseDto(
                 company.getId(),
                 company.getName(),
                 company.getWebsite(),
+                company.getStreet(),
+                company.getPostalCode(),
+                company.getCity()
+        );
+    }
+
+    @Override
+    public CompanyCompactDto toCompactDto(Company company, int jobCount) {
+        return new CompanyCompactDto(
+                company.getId(),
+                company.getName(),
                 jobCount
         );
     }
 
     @Override
-    public CompactCompanyDto toDto(Company company) {
-        return new CompactCompanyDto(
+    public CompanyDetailDto toDetailDto(Company company, int jobCount) {
+        return new CompanyDetailDto(
                 company.getId(),
                 company.getName(),
-                company.getWebsite()
+                company.getWebsite(),
+                company.getStreet(),
+                company.getPostalCode(),
+                company.getCity(),
+                jobCount
         );
     }
 
@@ -34,6 +50,9 @@ public class CompanyMapperImpl implements CompanyMapper {
         Company company = new Company();
         company.setName(request.name());
         company.setWebsite(request.website());
+        company.setStreet(request.street());
+        company.setPostalCode(request.postalCode());
+        company.setCity(request.city());
 
         return company;
     }
@@ -44,5 +63,8 @@ public class CompanyMapperImpl implements CompanyMapper {
 
         company.setName(companyRequestDto.name());
         company.setWebsite(companyRequestDto.website());
+        company.setStreet(companyRequestDto.street());
+        company.setPostalCode(companyRequestDto.postalCode());
+        company.setCity(companyRequestDto.city());
     }
 }

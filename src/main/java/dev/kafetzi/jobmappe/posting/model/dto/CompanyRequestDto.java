@@ -5,7 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 public record CompanyRequestDto(
         @NotBlank(message = "The Name is required")
         String name,
-
-        String website
+        String website,
+        String street,
+        String postalCode,
+        String city
 ) {
 }

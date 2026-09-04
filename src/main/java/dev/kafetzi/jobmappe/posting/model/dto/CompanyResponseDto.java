@@ -6,6 +6,8 @@ public record CompanyResponseDto(
         UUID id,
         String name,
         String website,
-        long jobsCount
+        String street,
+        String postalCode,
+        String city
 ) {
 }

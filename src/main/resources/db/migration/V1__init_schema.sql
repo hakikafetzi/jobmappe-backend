@@ -2,6 +2,9 @@ CREATE TABLE companies (
                            id         UUID PRIMARY KEY,
                            name       VARCHAR(255) NOT NULL,
                            website    VARCHAR(255),
+                           street     VARCHAR(255),
+                           postal_code VARCHAR(20),
+                           city       VARCHAR(255),
                            created_at TIMESTAMP    NOT NULL,
                            updated_at TIMESTAMP
 );

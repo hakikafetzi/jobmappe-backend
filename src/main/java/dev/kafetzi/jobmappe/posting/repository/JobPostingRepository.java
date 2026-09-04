@@ -19,7 +19,8 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, UUID> {
     @Query("SELECT j FROM JobPosting j LEFT JOIN FETCH j.company WHERE j.id = :id")
     Optional<JobPosting> findByIdWithCompany(@Param("id") UUID id);
 
-    List<JobPosting> findAllByCompanyId(UUID companyId);
+    @Query("SELECT j FROM JobPosting j LEFT JOIN FETCH j.company WHERE j.company.id = :companyId")
+    List<JobPosting> findAllByCompanyId(@Param("companyId") UUID companyId);
 
     @Query("SELECT j.company.id, COUNT(j) FROM JobPosting j GROUP BY j.company.id")
     List<Object[]> countJobPostingsPerCompany();

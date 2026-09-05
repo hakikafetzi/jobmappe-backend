@@ -4,7 +4,6 @@ import dev.kafetzi.jobmappe.tracking.mapper.ApplicationMapper;
 import dev.kafetzi.jobmappe.tracking.model.Application;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationResponseDto;
-import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationStatusDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,14 +18,6 @@ public class ApplicationMapperImpl implements ApplicationMapper {
                 application.getPriority(),
                 application.getAppliedAt(),
                 daysSinceApplication
-        );
-    }
-
-    @Override
-    public ApplicationStatusDto toStatusDto(Application application) {
-        return new ApplicationStatusDto(
-                application.getId(),
-                application.getStatus()
         );
     }
 

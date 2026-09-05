@@ -15,7 +15,8 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
     @Query("SELECT a FROM Application a JOIN FETCH a.jobPosting jp JOIN FETCH jp.company c")
     List<Application> findAllWithJobPostingAndCompany();
 
-    Optional<Application> findApplicationByJobPostingId(UUID jobPostingId);
-
     boolean existsApplicationByJobPostingId(UUID jobPostingId);
+
+    @Query("SELECT a.jobPosting.id FROM Application a")
+    List<UUID> findAllAppliedJobPostingIds();
 }

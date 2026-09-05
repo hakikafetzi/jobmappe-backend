@@ -4,6 +4,7 @@ import dev.kafetzi.jobmappe.tracking.mapper.JobPostingMapper;
 import dev.kafetzi.jobmappe.tracking.model.Company;
 import dev.kafetzi.jobmappe.tracking.model.JobPosting;
 import dev.kafetzi.jobmappe.tracking.model.dto.*;
+import dev.kafetzi.jobmappe.tracking.repository.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.repository.CompanyRepository;
 import dev.kafetzi.jobmappe.tracking.repository.JobPostingRepository;
 import dev.kafetzi.jobmappe.tracking.service.JobPostingService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -20,13 +22,22 @@ import java.util.UUID;
 public class JobPostingServiceImpl implements JobPostingService {
     private final JobPostingRepository jobPostingRepository;
     private final CompanyRepository companyRepository;
+    private final ApplicationRepository applicationRepository;
     private final JobPostingMapper jobPostingMapper;
 
     @Override
     public List<JobPostingCompactDto> getAllJobPostings() {
-        return jobPostingRepository.findAllWithCompany()
+        List<JobPosting> jobPostings = jobPostingRepository.findAllWithCompany();
+        Set<UUID> jobPostingIds =  Set.copyOf(applicationRepository.findAllAppliedJobPostingIds());
+
+        return jobPostings
                 .stream()
-                .map(jobPostingMapper::toCompactDto)
+                .map(
+                        jobPosting -> jobPostingMapper.toCompactDto(
+                                jobPosting,
+                                jobPostingIds.contains(jobPosting.getId())
+                        )
+                )
                 .toList();
     }
 
@@ -48,9 +59,10 @@ public class JobPostingServiceImpl implements JobPostingService {
     public JobPostingDetailDto getJobPosting(UUID postingId) {
         JobPosting jobPosting = jobPostingRepository.findByIdWithCompany(postingId)
                 .orElseThrow(() -> new IllegalArgumentException("Job posting with id: " + postingId + " not found"));
+        Boolean hasApplication = applicationRepository.existsApplicationByJobPostingId(postingId);
 
 
-        return jobPostingMapper.toDetailDto(jobPosting);
+        return jobPostingMapper.toDetailDto(jobPosting, hasApplication);
     }
 
     @Override
@@ -66,9 +78,17 @@ public class JobPostingServiceImpl implements JobPostingService {
 
     @Override
     public List<JobPostingCompactDto> getAllJobPostingsByCompanyId(UUID companyId) {
-        return jobPostingRepository.findAllByCompanyId(companyId)
+        List<JobPosting> jobPostings = jobPostingRepository.findAllByCompanyId(companyId);
+        Set<UUID> jobPostingIds =  Set.copyOf(applicationRepository.findAllAppliedJobPostingIds());
+
+        return jobPostings
                 .stream()
-                .map(jobPostingMapper::toCompactDto)
+                .map(
+                        jobPosting -> jobPostingMapper.toCompactDto(
+                                jobPosting,
+                                jobPostingIds.contains(jobPosting.getId())
+                        )
+                )
                 .toList();
     }
 }

@@ -44,7 +44,7 @@ public class JobPostingMapperImpl implements JobPostingMapper {
     }
 
     @Override
-    public JobPostingDetailDto toDetailDto(JobPosting jobPosting) {
+    public JobPostingDetailDto toDetailDto(JobPosting jobPosting, Boolean hasApplication) {
         return new JobPostingDetailDto(
                 jobPosting.getId(),
                 companyMapper.toDto(jobPosting.getCompany()),
@@ -53,18 +53,20 @@ public class JobPostingMapperImpl implements JobPostingMapper {
                 jobPosting.getLocation(),
                 jobPosting.getUrl(),
                 jobPosting.getStatus(),
+                hasApplication,
                 jobPosting.getPublishedAt(),
                 jobPosting.getCreatedAt()
         );
     }
 
     @Override
-    public JobPostingCompactDto toCompactDto(JobPosting jobPosting) {
+    public JobPostingCompactDto toCompactDto(JobPosting jobPosting, Boolean hasApplication) {
         return new JobPostingCompactDto(
                 jobPosting.getId(),
                 jobPosting.getTitle(),
                 jobPosting.getCompany().getName(),
                 jobPosting.getLocation(),
+                hasApplication,
                 jobPosting.getCreatedAt()
         );
     }

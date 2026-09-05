@@ -6,7 +6,6 @@ import dev.kafetzi.jobmappe.tracking.model.ApplicationPriority;
 import dev.kafetzi.jobmappe.tracking.model.ApplicationStatus;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationResponseDto;
-import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationStatusDto;
 import dev.kafetzi.jobmappe.tracking.repository.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.service.ApplicationService;
 import dev.kafetzi.jobmappe.tracking.model.JobPosting;
@@ -41,16 +40,6 @@ public class ApplicationServiceImpl implements ApplicationService {
                     return applicationMapper.toCompactDto(application, daysSinceApplication);
                 })
                 .toList();
-    }
-
-    @Override
-    public ApplicationStatusDto getApplicationByJobPostingId(UUID jobPostingId) {
-        Application application = applicationRepository.findApplicationByJobPostingId(jobPostingId)
-                .orElseThrow(
-                        () -> new IllegalArgumentException("Application not found for job posting ID: " + jobPostingId)
-                );
-
-        return applicationMapper.toStatusDto(application);
     }
 
     @Override

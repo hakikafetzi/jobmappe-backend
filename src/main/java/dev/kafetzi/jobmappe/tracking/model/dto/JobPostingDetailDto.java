@@ -14,6 +14,7 @@ public record JobPostingDetailDto(
         String location,
         String url,
         JobPostingStatus status,
+        Boolean hasApplication,
         LocalDate publishedAt,
         LocalDateTime createdAt
 ) {

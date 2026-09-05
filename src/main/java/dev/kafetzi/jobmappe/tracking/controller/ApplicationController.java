@@ -3,7 +3,6 @@ package dev.kafetzi.jobmappe.tracking.controller;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationDetailDto;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationResponseDto;
-import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationStatusDto;
 import dev.kafetzi.jobmappe.tracking.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,13 +30,6 @@ public class ApplicationController {
     public ResponseEntity<ApplicationDetailDto> getApplication(@PathVariable UUID id) {
 
         return null;
-    }
-
-    @GetMapping("/api/job-postings/{jobPostingId}/applications")
-    public ResponseEntity<ApplicationStatusDto> getApplicationByJobPostingId(@PathVariable UUID jobPostingId) {
-        ApplicationStatusDto applicationStatusDto = applicationService.getApplicationByJobPostingId(jobPostingId);
-
-        return ResponseEntity.ok(applicationStatusDto);
     }
 
     @PostMapping("/api/job-postings/{jobPostingId}/applications")

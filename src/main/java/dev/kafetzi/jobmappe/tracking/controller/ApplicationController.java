@@ -28,8 +28,9 @@ public class ApplicationController {
 
     @GetMapping("api/applications/{id}")
     public ResponseEntity<ApplicationDetailDto> getApplication(@PathVariable UUID id) {
+        ApplicationDetailDto application = applicationService.getApplication(id);
 
-        return null;
+        return ResponseEntity.ok(application);
     }
 
     @PostMapping("/api/job-postings/{jobPostingId}/applications")

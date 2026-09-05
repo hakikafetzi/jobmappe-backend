@@ -5,6 +5,7 @@ import dev.kafetzi.jobmappe.tracking.model.Application;
 import dev.kafetzi.jobmappe.tracking.model.ApplicationPriority;
 import dev.kafetzi.jobmappe.tracking.model.ApplicationStatus;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationCompactDto;
+import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationDetailDto;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationResponseDto;
 import dev.kafetzi.jobmappe.tracking.repository.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.service.ApplicationService;
@@ -61,5 +62,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         Application savedApplication = applicationRepository.save(application);
 
         return applicationMapper.toResponseDto(savedApplication);
+    }
+
+    @Override
+    public ApplicationDetailDto getApplication(UUID id) {
+        Application application = applicationRepository.findByIdWithJobPostingAndCompany(id)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Application not found for ID: " + id)
+                );
+
+        return applicationMapper.toDetailDto(application);
     }
 }

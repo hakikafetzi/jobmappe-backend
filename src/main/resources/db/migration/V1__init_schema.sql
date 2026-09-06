@@ -42,7 +42,7 @@ CREATE TABLE applications (
                               updated_at     TIMESTAMP
 );
 
-CREATE TABLE application_notes (
+CREATE TABLE notes (
                                    id               UUID PRIMARY KEY,
                                    application_id   UUID         NOT NULL REFERENCES applications (id) ON DELETE CASCADE,
                                    note_category_id UUID         REFERENCES note_categories (id) ON DELETE SET NULL,

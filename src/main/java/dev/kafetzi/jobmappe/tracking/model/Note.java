@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "application_notes")
+@Table(name = "notes")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class ApplicationNote {
+public class Note {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

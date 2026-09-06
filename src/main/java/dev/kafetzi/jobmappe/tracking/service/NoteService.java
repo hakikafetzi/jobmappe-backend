@@ -12,4 +12,5 @@ public interface NoteService {
     List<NoteCompactDto> getAllNotes(UUID applicationId);
     NoteDetailDto getNote(UUID id);
     NoteDetailDto createNote(UUID applicationId, NoteRequestDto noteRequestDto);
+    NoteDetailDto updateNote(UUID id, NoteRequestDto noteRequestDto);
 }

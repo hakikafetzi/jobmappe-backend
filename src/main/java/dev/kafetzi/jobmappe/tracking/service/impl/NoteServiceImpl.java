@@ -59,4 +59,20 @@ public class NoteServiceImpl implements NoteService {
 
         return noteMapper.toNoteDetailDto(savedNote);
     }
+
+    @Override
+    @Transactional
+    public NoteDetailDto updateNote(UUID id, NoteRequestDto noteRequestDto) {
+        Note note = noteRepository.findByIdWithNoteCategory(id)
+                .orElseThrow(() -> new IllegalArgumentException("Note not found with id: " + id));
+
+        NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Note category not found with id: " + noteRequestDto.noteCategoryId()));
+
+        note.setTitle(noteRequestDto.title());
+        note.setContent(noteRequestDto.content());
+        note.setNoteCategory(noteCategory);
+
+        return noteMapper.toNoteDetailDto(note);
+    }
 }

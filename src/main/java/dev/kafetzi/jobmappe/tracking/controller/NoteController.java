@@ -48,4 +48,14 @@ public class NoteController {
 
         return ResponseEntity.created(location).body(note);
     }
+
+    @PutMapping("/api/notes/{id}")
+    public ResponseEntity<NoteDetailDto> updateNote(
+            @PathVariable UUID id,
+            @RequestBody NoteRequestDto noteRequestDto
+    ) {
+        NoteDetailDto note = noteService.updateNote(id, noteRequestDto);
+
+        return ResponseEntity.ok(note);
+    }
 }

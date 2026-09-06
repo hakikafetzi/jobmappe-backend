@@ -11,6 +11,7 @@ import dev.kafetzi.jobmappe.tracking.repository.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.repository.NoteCategoryRepository;
 import dev.kafetzi.jobmappe.tracking.repository.NoteRepository;
 import dev.kafetzi.jobmappe.tracking.service.NoteService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    @Transactional
     public NoteDetailDto createNote(UUID applicationId, NoteRequestDto noteRequestDto) {
         NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Note category not found with id: " + noteRequestDto.noteCategoryId()));

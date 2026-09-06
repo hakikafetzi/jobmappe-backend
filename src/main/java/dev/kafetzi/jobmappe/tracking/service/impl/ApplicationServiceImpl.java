@@ -46,6 +46,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional
     public ApplicationResponseDto createApplication(UUID jobPostingId) {
         if (applicationRepository.existsApplicationByJobPostingId(jobPostingId)) {
             throw new IllegalArgumentException("Application already exists for job posting ID: " + jobPostingId);

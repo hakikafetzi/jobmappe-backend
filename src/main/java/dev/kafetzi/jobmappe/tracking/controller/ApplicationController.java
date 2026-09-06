@@ -27,7 +27,7 @@ public class ApplicationController {
         return ResponseEntity.ok(applications);
     }
 
-    @GetMapping("api/applications/{id}")
+    @GetMapping("/api/applications/{id}")
     public ResponseEntity<ApplicationDetailDto> getApplication(@PathVariable UUID id) {
         ApplicationDetailDto application = applicationService.getApplication(id);
 

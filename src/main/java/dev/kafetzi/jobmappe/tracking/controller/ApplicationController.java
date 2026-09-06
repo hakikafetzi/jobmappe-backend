@@ -2,6 +2,7 @@ package dev.kafetzi.jobmappe.tracking.controller;
 
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationDetailDto;
+import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationPatchDto;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationResponseDto;
 import dev.kafetzi.jobmappe.tracking.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,16 @@ public class ApplicationController {
     @GetMapping("api/applications/{id}")
     public ResponseEntity<ApplicationDetailDto> getApplication(@PathVariable UUID id) {
         ApplicationDetailDto application = applicationService.getApplication(id);
+
+        return ResponseEntity.ok(application);
+    }
+
+    @PatchMapping("/api/applications/{id}")
+    public ResponseEntity<ApplicationResponseDto> updateApplication(
+            @PathVariable UUID id,
+            @RequestBody ApplicationPatchDto applicationPatchDto
+    ) {
+        ApplicationResponseDto application = applicationService.updateApplication(id, applicationPatchDto);
 
         return ResponseEntity.ok(application);
     }

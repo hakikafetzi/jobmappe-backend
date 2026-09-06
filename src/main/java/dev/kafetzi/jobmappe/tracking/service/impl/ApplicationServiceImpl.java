@@ -6,11 +6,13 @@ import dev.kafetzi.jobmappe.tracking.model.ApplicationPriority;
 import dev.kafetzi.jobmappe.tracking.model.ApplicationStatus;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationDetailDto;
+import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationPatchDto;
 import dev.kafetzi.jobmappe.tracking.model.dto.ApplicationResponseDto;
 import dev.kafetzi.jobmappe.tracking.repository.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.service.ApplicationService;
 import dev.kafetzi.jobmappe.tracking.model.JobPosting;
 import dev.kafetzi.jobmappe.tracking.repository.JobPostingRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -72,5 +74,30 @@ public class ApplicationServiceImpl implements ApplicationService {
                 );
 
         return applicationMapper.toDetailDto(application);
+    }
+
+    @Override
+    @Transactional
+    public ApplicationResponseDto updateApplication(UUID id, ApplicationPatchDto applicationPatchDto) {
+        Application application = applicationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Application not found for ID: " + id));
+
+        if (applicationPatchDto.status() != null) {
+            application.setStatus(applicationPatchDto.status());
+        }
+
+        if (applicationPatchDto.priority() != null) {
+            application.setPriority(applicationPatchDto.priority());
+        }
+
+        if (applicationPatchDto.appliedVia() != null) {
+            application.setAppliedVia(applicationPatchDto.appliedVia());
+        }
+
+        if (applicationPatchDto.portalUrl() != null) {
+            application.setPortalUrl(applicationPatchDto.portalUrl());
+        }
+
+        return applicationMapper.toResponseDto(application);
     }
 }

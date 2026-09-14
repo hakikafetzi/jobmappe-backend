@@ -48,7 +48,7 @@ public class NoteServiceImpl implements NoteService {
     public NoteDetailDto createNote(UUID applicationId, NoteRequestDto noteRequestDto) {
         Note note = noteMapper.toEntity(noteRequestDto);
 
-        if ((noteRequestDto.noteCategoryId() != null)) {
+        if (noteRequestDto.noteCategoryId() != null) {
             NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
                     .orElseThrow(() -> new IllegalArgumentException("Note category not found with id: " + noteRequestDto.noteCategoryId()));
             note.setNoteCategory(noteCategory);

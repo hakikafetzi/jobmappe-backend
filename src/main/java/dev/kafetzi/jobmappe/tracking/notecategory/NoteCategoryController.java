@@ -41,7 +41,7 @@ public class NoteCategoryController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/companies/{id}")
+                .path("/api/note-categories/{id}")
                 .buildAndExpand(noteCategoryDto.id())
                 .toUri();
 

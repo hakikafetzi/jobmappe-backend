@@ -13,7 +13,7 @@ public class NoteMapperImpl implements NoteMapper {
     public NoteCompactDto toNoteCompactDto(Note note) {
         return new NoteCompactDto(
                 note.getId(),
-                note.getNoteCategory().getName(),
+                note.getNoteCategory() != null ? note.getNoteCategory().getName() : null,
                 note.getTitle(),
                 note.getCreatedAt()
         );
@@ -23,7 +23,7 @@ public class NoteMapperImpl implements NoteMapper {
     public NoteDetailDto toNoteDetailDto(Note note) {
         return new NoteDetailDto(
                 note.getId(),
-                note.getNoteCategory().getName(),
+                note.getNoteCategory() != null ? note.getNoteCategory().getName() : null,
                 note.getTitle(),
                 note.getContent(),
                 note.getCreatedAt(),
@@ -38,5 +38,13 @@ public class NoteMapperImpl implements NoteMapper {
         note.setContent(noteRequestDto.content());
 
         return note;
+    }
+
+    @Override
+    public void updateEntityFromDto(NoteRequestDto noteRequestDto, Note note) {
+        if (noteRequestDto == null || note == null) return;
+
+        note.setTitle(noteRequestDto.title());
+        note.setContent(noteRequestDto.content());
     }
 }

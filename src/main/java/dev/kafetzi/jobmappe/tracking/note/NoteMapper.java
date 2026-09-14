@@ -9,4 +9,5 @@ public interface NoteMapper {
     NoteCompactDto toNoteCompactDto(Note note);
     NoteDetailDto toNoteDetailDto(Note note);
     Note toEntity(NoteRequestDto noteRequestDto);
+    void updateEntityFromDto(NoteRequestDto noteRequestDto, Note note);
 }

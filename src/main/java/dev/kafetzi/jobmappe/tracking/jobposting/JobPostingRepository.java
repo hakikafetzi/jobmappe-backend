@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.jobposting;
 
+import dev.kafetzi.jobmappe.tracking.jobposting.projection.CountByCompanyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,8 +22,8 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, UUID> {
     @Query("SELECT j FROM JobPosting j LEFT JOIN FETCH j.company WHERE j.company.id = :companyId")
     List<JobPosting> findAllByCompanyId(@Param("companyId") UUID companyId);
 
-    @Query("SELECT j.company.id, COUNT(j) FROM JobPosting j GROUP BY j.company.id")
-    List<Object[]> countJobPostingsPerCompany();
+    @Query("SELECT j.company.id AS companyId, COUNT(j) AS count FROM JobPosting j GROUP BY j.company.id")
+    List<CountByCompanyProjection> countJobPostingsPerCompany();
 
     long countJobPostingsByCompanyId(UUID companyId);
 }

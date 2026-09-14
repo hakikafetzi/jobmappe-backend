@@ -9,7 +9,8 @@ import dev.kafetzi.jobmappe.tracking.company.dto.CompanyResponseDto;
 import dev.kafetzi.jobmappe.tracking.company.CompanyRepository;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
 import dev.kafetzi.jobmappe.tracking.company.CompanyService;
-import jakarta.transaction.Transactional;
+import dev.kafetzi.jobmappe.tracking.jobposting.projection.CountByCompanyProjection;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +34,8 @@ public class CompanyServiceImpl implements CompanyService {
         Map<UUID, Long> jobCountsByCompanyId = jobPostingRepository.countJobPostingsPerCompany()
                 .stream()
                 .collect(Collectors.toMap(
-                        row -> (UUID) row[0],
-                        row -> (Long) row[1]
+                        CountByCompanyProjection::getCompanyId,
+                        CountByCompanyProjection::getCount
                 ));
 
         return companies.stream()

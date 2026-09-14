@@ -11,7 +11,7 @@ import dev.kafetzi.jobmappe.tracking.application.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategoryRepository;
 import dev.kafetzi.jobmappe.tracking.note.NoteRepository;
 import dev.kafetzi.jobmappe.tracking.note.NoteService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,13 +46,17 @@ public class NoteServiceImpl implements NoteService {
     @Override
     @Transactional
     public NoteDetailDto createNote(UUID applicationId, NoteRequestDto noteRequestDto) {
-        NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Note category not found with id: " + noteRequestDto.noteCategoryId()));
+        Note note = noteMapper.toEntity(noteRequestDto);
+
+        if ((noteRequestDto.noteCategoryId() != null)) {
+            NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Note category not found with id: " + noteRequestDto.noteCategoryId()));
+            note.setNoteCategory(noteCategory);
+        }
+
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new IllegalArgumentException("Application not found with id: " + applicationId));
 
-        Note note = noteMapper.toEntity(noteRequestDto);
-        note.setNoteCategory(noteCategory);
         note.setApplication(application);
 
         Note savedNote = noteRepository.save(note);
@@ -66,12 +70,15 @@ public class NoteServiceImpl implements NoteService {
         Note note = noteRepository.findByIdWithNoteCategory(id)
                 .orElseThrow(() -> new IllegalArgumentException("Note not found with id: " + id));
 
-        NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Note category not found with id: " + noteRequestDto.noteCategoryId()));
+        if (noteRequestDto.noteCategoryId() != null) {
+            NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Note category not found with id: " + noteRequestDto.noteCategoryId()));
+            note.setNoteCategory(noteCategory);
+        } else {
+            note.setNoteCategory(null);
+        }
 
-        note.setTitle(noteRequestDto.title());
-        note.setContent(noteRequestDto.content());
-        note.setNoteCategory(noteCategory);
+        noteMapper.updateEntityFromDto(noteRequestDto, note);
 
         return noteMapper.toNoteDetailDto(note);
     }

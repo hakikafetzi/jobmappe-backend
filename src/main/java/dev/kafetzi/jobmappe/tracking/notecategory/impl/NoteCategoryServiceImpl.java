@@ -6,7 +6,7 @@ import dev.kafetzi.jobmappe.tracking.notecategory.dto.NoteCategoryRequestDto;
 import dev.kafetzi.jobmappe.tracking.notecategory.dto.NoteCategoryDto;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategoryRepository;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategoryService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

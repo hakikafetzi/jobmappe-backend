@@ -5,10 +5,8 @@ import dev.kafetzi.jobmappe.tracking.application.ApplicationStatus;
 import jakarta.validation.constraints.Size;
 
 public record ApplicationPatchDto(
-        @Size(max = 50, message = "The status must not exceed 50 characters")
         ApplicationStatus status,
 
-        @Size(max = 50, message = "The priority must not exceed 50 characters")
         ApplicationPriority priority,
 
         @Size(max = 255, message = "The applied via must not exceed 255 characters")

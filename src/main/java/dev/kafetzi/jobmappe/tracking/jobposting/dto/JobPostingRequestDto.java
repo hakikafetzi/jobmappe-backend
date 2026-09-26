@@ -22,7 +22,6 @@ public record JobPostingRequestDto(
         String url,
 
         @NotNull(message = "The status is required")
-        @Size(max = 50, message = "The status must not exceed 50 characters")
         JobPostingStatus status,
 
         LocalDate publishedAt

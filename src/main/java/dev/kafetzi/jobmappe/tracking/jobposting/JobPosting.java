@@ -39,7 +39,7 @@ public class JobPosting {
     private String url;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, length = 50)
     private JobPostingStatus status;
 
     @Column(name = "published_at")

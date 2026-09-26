@@ -9,6 +9,8 @@ CREATE TABLE companies (
                            updated_at TIMESTAMP
 );
 
+CREATE UNIQUE INDEX ux_companies_name ON companies (LOWER(TRIM(name)));
+
 CREATE TABLE job_postings (
                               id           UUID PRIMARY KEY,
                               company_id   UUID          NOT NULL REFERENCES companies (id),
@@ -24,16 +26,18 @@ CREATE TABLE job_postings (
 
 CREATE TABLE note_categories (
                                  id         UUID PRIMARY KEY,
-                                 name       VARCHAR(255) NOT NULL UNIQUE,
+                                 name       VARCHAR(255) NOT NULL,
                                  created_at TIMESTAMP    NOT NULL,
                                  updated_at TIMESTAMP
 );
+
+CREATE UNIQUE INDEX ux_note_categories_name ON note_categories (LOWER(TRIM(name)));
 
 CREATE TABLE applications (
                               id             UUID PRIMARY KEY,
                               job_posting_id UUID         NOT NULL UNIQUE REFERENCES job_postings (id),
                               status         VARCHAR(50)  NOT NULL,
-                              priority       VARCHAR(50),
+                              priority       VARCHAR(50)  NOT NULL,
                               applied_at     DATE,
                               applied_via    VARCHAR(255),
                               portal_url     VARCHAR(1000),

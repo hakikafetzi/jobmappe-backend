@@ -29,7 +29,7 @@ public class Company {
     @Column(name = "street")
     private String street;
 
-    @Column(name = "postal_code")
+    @Column(name = "postal_code", length = 20)
     private String postalCode;
 
     @Column(name = "city")

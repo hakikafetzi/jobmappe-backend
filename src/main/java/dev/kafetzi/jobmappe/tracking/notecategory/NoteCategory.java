@@ -24,7 +24,7 @@ public class NoteCategory {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @CreationTimestamp

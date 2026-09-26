@@ -31,11 +31,11 @@ public class Application {
     private JobPosting jobPosting;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = false, length = 50)
     private ApplicationStatus status;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "priority")
+    @Column(name = "priority", nullable = false, length = 50)
     private ApplicationPriority priority;
 
     @Column(name = "applied_at")

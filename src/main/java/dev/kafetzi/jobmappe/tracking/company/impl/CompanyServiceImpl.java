@@ -60,11 +60,13 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional
     public CompanyResponseDto createCompany(CompanyRequestDto requestDto) {
         Company company = companyMapper.toEntity(requestDto);
+        String normalizedCompanyName = company.getName().strip();
 
-        if(companyRepository.existsByNameIgnoreCase(company.getName())){
-            throw new IllegalArgumentException("Company already exists with name " + company.getName());
+        if(companyRepository.existsByNameIgnoreCase(normalizedCompanyName)) {
+            throw new IllegalArgumentException("Company already exists with name " + normalizedCompanyName);
         }
 
+        company.setName(normalizedCompanyName);
         Company newCompany = companyRepository.save(company);
 
         return companyMapper.toDto(newCompany);
@@ -76,7 +78,14 @@ public class CompanyServiceImpl implements CompanyService {
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Company not found with id " + id));
 
+        String normalizedRequestName = requestDto.name().strip();
+
+        if(companyRepository.existsByNameIgnoreCaseAndIdNot(normalizedRequestName, id)) {
+            throw new IllegalArgumentException("Company already exists with name " + normalizedRequestName);
+        }
+
         companyMapper.updateEntityFromDto(requestDto, company);
+        company.setName(normalizedRequestName);
 
         return companyMapper.toDto(company);
     }

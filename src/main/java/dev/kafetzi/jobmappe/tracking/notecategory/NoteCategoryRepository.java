@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface NoteCategoryRepository extends JpaRepository<NoteCategory, UUID> {
 
     boolean existsByNameIgnoreCase(String name);
+
+    boolean existsByNameIgnoreCaseAndIdNot(String name, UUID id);
 }

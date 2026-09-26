@@ -43,10 +43,13 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
     public NoteCategoryDto createNoteCategory(NoteCategoryRequestDto noteCategoryRequestDto) {
         NoteCategory noteCategory = noteCategoryMapper.toEntity(noteCategoryRequestDto);
 
-        if (noteCategoryRepository.existsByNameIgnoreCase(noteCategory.getName())) {
-            throw new IllegalArgumentException("Note category already exists with name " + noteCategory.getName());
+        String normalizedCategoryName = noteCategory.getName().strip();
+
+        if (noteCategoryRepository.existsByNameIgnoreCase(normalizedCategoryName)) {
+            throw new IllegalArgumentException("Note category already exists with name " + normalizedCategoryName);
         }
 
+        noteCategory.setName(normalizedCategoryName);
         NoteCategory newNoteCategory = noteCategoryRepository.save(noteCategory);
 
         return noteCategoryMapper.toDto(newNoteCategory);
@@ -58,7 +61,14 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
         NoteCategory noteCategory = noteCategoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Note Category Not Found"));
 
+        String normalizedCategoryName = noteCategoryRequestDto.name().strip();
+
+        if (noteCategoryRepository.existsByNameIgnoreCaseAndIdNot(normalizedCategoryName, id)) {
+            throw new IllegalArgumentException("Note category already exists with name " + normalizedCategoryName);
+        }
+
         noteCategoryMapper.updateEntity(noteCategory, noteCategoryRequestDto);
+        noteCategory.setName(normalizedCategoryName);
 
         return noteCategoryMapper.toDto(noteCategory);
     }

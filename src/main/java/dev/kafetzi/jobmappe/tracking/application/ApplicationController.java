@@ -4,6 +4,7 @@ import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationDetailDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationPatchDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class ApplicationController {
     @PatchMapping("/api/applications/{id}")
     public ResponseEntity<ApplicationResponseDto> updateApplication(
             @PathVariable UUID id,
-            @RequestBody ApplicationPatchDto applicationPatchDto
+            @Valid @RequestBody ApplicationPatchDto applicationPatchDto
     ) {
         ApplicationResponseDto application = applicationService.updateApplication(id, applicationPatchDto);
 

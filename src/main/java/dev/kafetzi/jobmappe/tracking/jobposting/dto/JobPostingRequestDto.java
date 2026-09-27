@@ -1,9 +1,7 @@
 package dev.kafetzi.jobmappe.tracking.jobposting.dto;
 
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingStatus;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
@@ -14,6 +12,7 @@ public record JobPostingRequestDto(
 
         String description,
 
+        @Pattern(regexp = ".*\\S.*", message = "The Location must not be blank or contain only whitespace")
         @Size(max = 255, message = "The Location must not exceed 255 characters")
         String location,
 
@@ -24,6 +23,7 @@ public record JobPostingRequestDto(
         @NotNull(message = "The status is required")
         JobPostingStatus status,
 
+        @PastOrPresent(message = "The published date cannot be in the future")
         LocalDate publishedAt
 ) {
 }

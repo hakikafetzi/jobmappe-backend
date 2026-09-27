@@ -3,6 +3,7 @@ package dev.kafetzi.jobmappe.tracking.note;
 import dev.kafetzi.jobmappe.tracking.note.dto.NoteCompactDto;
 import dev.kafetzi.jobmappe.tracking.note.dto.NoteDetailDto;
 import dev.kafetzi.jobmappe.tracking.note.dto.NoteRequestDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class NoteController {
     @PostMapping("/api/applications/{applicationId}/notes")
     public ResponseEntity<NoteDetailDto> createNote(
             @PathVariable UUID applicationId,
-            @RequestBody NoteRequestDto noteRequestDto
+            @Valid @RequestBody NoteRequestDto noteRequestDto
             ) {
         NoteDetailDto note = noteService.createNote(applicationId, noteRequestDto);
 
@@ -51,7 +52,7 @@ public class NoteController {
     @PutMapping("/api/notes/{id}")
     public ResponseEntity<NoteDetailDto> updateNote(
             @PathVariable UUID id,
-            @RequestBody NoteRequestDto noteRequestDto
+            @Valid @RequestBody NoteRequestDto noteRequestDto
     ) {
         NoteDetailDto note = noteService.updateNote(id, noteRequestDto);
 

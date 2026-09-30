@@ -22,4 +22,7 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
 
     @Query("SELECT a.jobPosting.id FROM Application a")
     List<UUID> findAllAppliedJobPostingIds();
+
+    @Query("SELECT a.id FROM Application a WHERE a.jobPosting.id = :jobPostingId")
+    Optional<UUID> findApplicationIdByJobPostingId(UUID jobPostingId);
 }

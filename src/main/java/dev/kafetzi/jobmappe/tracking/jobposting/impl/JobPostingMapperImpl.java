@@ -10,6 +10,8 @@ import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 public class JobPostingMapperImpl implements JobPostingMapper {
@@ -44,7 +46,7 @@ public class JobPostingMapperImpl implements JobPostingMapper {
     }
 
     @Override
-    public JobPostingDetailDto toDetailDto(JobPosting jobPosting, Boolean hasApplication) {
+    public JobPostingDetailDto toDetailDto(JobPosting jobPosting, UUID applicationId) {
         return new JobPostingDetailDto(
                 jobPosting.getId(),
                 companyMapper.toDto(jobPosting.getCompany()),
@@ -53,7 +55,8 @@ public class JobPostingMapperImpl implements JobPostingMapper {
                 jobPosting.getLocation(),
                 jobPosting.getUrl(),
                 jobPosting.getStatus(),
-                hasApplication,
+                applicationId != null,
+                applicationId,
                 jobPosting.getPublishedAt(),
                 jobPosting.getCreatedAt()
         );

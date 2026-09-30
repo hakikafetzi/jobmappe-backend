@@ -62,10 +62,11 @@ public class JobPostingServiceImpl implements JobPostingService {
     public JobPostingDetailDto getJobPosting(UUID postingId) {
         JobPosting jobPosting = jobPostingRepository.findByIdWithCompany(postingId)
                 .orElseThrow(() -> new IllegalArgumentException("Job posting with id: " + postingId + " not found"));
-        Boolean hasApplication = applicationRepository.existsApplicationByJobPostingId(postingId);
+        UUID applicationId = applicationRepository.findApplicationIdByJobPostingId(postingId)
+                .orElse(null);
 
 
-        return jobPostingMapper.toDetailDto(jobPosting, hasApplication);
+        return jobPostingMapper.toDetailDto(jobPosting, applicationId);
     }
 
     @Override

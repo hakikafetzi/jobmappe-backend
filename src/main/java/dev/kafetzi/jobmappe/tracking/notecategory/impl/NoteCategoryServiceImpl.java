@@ -1,5 +1,7 @@
 package dev.kafetzi.jobmappe.tracking.notecategory.impl;
 
+import dev.kafetzi.jobmappe.exception.ConflictException;
+import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategoryMapper;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategory;
 import dev.kafetzi.jobmappe.tracking.notecategory.dto.NoteCategoryRequestDto;
@@ -33,7 +35,10 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
     @Override
     public NoteCategoryDto getNoteCategoryById(UUID id) {
         NoteCategory noteCategory = noteCategoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Note Category Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Note Category with id " + id + " was not found."
+                        )
+                );
 
         return noteCategoryMapper.toDto(noteCategory);
     }
@@ -46,7 +51,9 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
         String normalizedCategoryName = noteCategory.getName().strip();
 
         if (noteCategoryRepository.existsByNameIgnoreCase(normalizedCategoryName)) {
-            throw new IllegalArgumentException("Note category already exists with name " + normalizedCategoryName);
+            throw new ConflictException(
+                    "Note category with name " + normalizedCategoryName + " already exists."
+            );
         }
 
         noteCategory.setName(normalizedCategoryName);
@@ -59,12 +66,17 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
     @Transactional
     public NoteCategoryDto updateNoteCategory(UUID id, NoteCategoryRequestDto noteCategoryRequestDto) {
         NoteCategory noteCategory = noteCategoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Note Category Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Note Category with id " + id + " was not found."
+                        )
+                );
 
         String normalizedCategoryName = noteCategoryRequestDto.name().strip();
 
         if (noteCategoryRepository.existsByNameIgnoreCaseAndIdNot(normalizedCategoryName, id)) {
-            throw new IllegalArgumentException("Note category already exists with name " + normalizedCategoryName);
+            throw new ConflictException(
+                    "Note category with name " + normalizedCategoryName + " already exists."
+            );
         }
 
         noteCategoryMapper.updateEntity(noteCategory, noteCategoryRequestDto);
@@ -77,7 +89,10 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
     @Transactional
     public void deleteNoteCategory(UUID id) {
         NoteCategory noteCategory = noteCategoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Note Category Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Note Category with id " + id + " was not found."
+                        )
+                );
 
         noteCategoryRepository.delete(noteCategory);
     }

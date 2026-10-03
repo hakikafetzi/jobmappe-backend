@@ -1,5 +1,7 @@
 package dev.kafetzi.jobmappe.tracking.company.impl;
 
+import dev.kafetzi.jobmappe.exception.ConflictException;
+import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.company.CompanyMapper;
 import dev.kafetzi.jobmappe.tracking.company.Company;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyCompactDto;
@@ -49,7 +51,10 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDetailDto getCompany(UUID id) {
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Company not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Company with id " + id + " was not found."
+                        )
+                );
 
         int jobCount = (int) jobPostingRepository.countJobPostingsByCompanyId(company.getId());
 
@@ -63,7 +68,9 @@ public class CompanyServiceImpl implements CompanyService {
         String normalizedCompanyName = company.getName().strip();
 
         if(companyRepository.existsByNameIgnoreCase(normalizedCompanyName)) {
-            throw new IllegalArgumentException("Company already exists with name " + normalizedCompanyName);
+            throw new ConflictException(
+                    "Company with name " + normalizedCompanyName + " already exists."
+            );
         }
 
         company.setName(normalizedCompanyName);
@@ -76,12 +83,17 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional
     public CompanyResponseDto updateCompany(UUID id, CompanyRequestDto requestDto) {
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Company not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Company with id " + id + " was not found."
+                        )
+                );
 
         String normalizedRequestName = requestDto.name().strip();
 
         if(companyRepository.existsByNameIgnoreCaseAndIdNot(normalizedRequestName, id)) {
-            throw new IllegalArgumentException("Company already exists with name " + normalizedRequestName);
+            throw new ConflictException(
+                    "Company with name " + normalizedRequestName + " already exists."
+            );
         }
 
         companyMapper.updateEntityFromDto(requestDto, company);

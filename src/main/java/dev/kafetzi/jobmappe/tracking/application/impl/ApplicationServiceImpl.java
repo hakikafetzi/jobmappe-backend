@@ -1,5 +1,7 @@
 package dev.kafetzi.jobmappe.tracking.application.impl;
 
+import dev.kafetzi.jobmappe.exception.ConflictException;
+import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationMapper;
 import dev.kafetzi.jobmappe.tracking.application.Application;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationPriority;
@@ -49,12 +51,16 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Transactional
     public ApplicationResponseDto createApplication(UUID jobPostingId) {
         if (applicationRepository.existsApplicationByJobPostingId(jobPostingId)) {
-            throw new IllegalArgumentException("Application already exists for job posting ID: " + jobPostingId);
+            throw new ConflictException(
+                    "Application for job posting with ID " + jobPostingId + " already exists."
+            );
         }
 
         JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
                 .orElseThrow(
-                        () -> new IllegalArgumentException("Job posting not found for ID: " + jobPostingId)
+                        () -> new ResourceNotFoundException(
+                                "Job posting with ID " + jobPostingId + " was not found."
+                        )
                 );
 
         Application application = new Application();
@@ -70,8 +76,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ApplicationDetailDto getApplication(UUID id) {
         Application application = applicationRepository.findByIdWithJobPostingAndCompany(id)
-                .orElseThrow(
-                        () -> new IllegalArgumentException("Application not found for ID: " + id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Application with ID " + id + " was not found."
+                        )
                 );
 
         return applicationMapper.toDetailDto(application);
@@ -81,7 +88,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Transactional
     public ApplicationResponseDto updateApplication(UUID id, ApplicationPatchDto applicationPatchDto) {
         Application application = applicationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Application not found for ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Application with ID " + id + " was not found."
+                        )
+                );
 
         if (applicationPatchDto.status() != null) {
             application.setStatus(applicationPatchDto.status());

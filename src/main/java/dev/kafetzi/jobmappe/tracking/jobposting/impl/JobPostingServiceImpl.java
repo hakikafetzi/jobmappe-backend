@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.jobposting.impl;
 
+import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingMapper;
 import dev.kafetzi.jobmappe.tracking.company.Company;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPosting;
@@ -48,7 +49,10 @@ public class JobPostingServiceImpl implements JobPostingService {
     @Transactional
     public JobPostingResponseDto createJobPosting(UUID companyId, JobPostingRequestDto jobPostingRequestDto) {
         Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new IllegalArgumentException("Company with id" + companyId + "Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Company with id " + companyId + " was not found."
+                        )
+                );
 
         JobPosting jobPosting = jobPostingMapper.toEntity(jobPostingRequestDto);
         jobPosting.setCompany(company);
@@ -61,7 +65,10 @@ public class JobPostingServiceImpl implements JobPostingService {
     @Override
     public JobPostingDetailDto getJobPosting(UUID postingId) {
         JobPosting jobPosting = jobPostingRepository.findByIdWithCompany(postingId)
-                .orElseThrow(() -> new IllegalArgumentException("Job posting with id: " + postingId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Job posting with id " + postingId + " was not found."
+                        )
+                );
         UUID applicationId = applicationRepository.findApplicationIdByJobPostingId(postingId)
                 .orElse(null);
 
@@ -73,7 +80,10 @@ public class JobPostingServiceImpl implements JobPostingService {
     @Transactional
     public JobPostingResponseDto updateJobPosting(UUID id, JobPostingRequestDto jobPostingRequestDto) {
         JobPosting jobPosting = jobPostingRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Job posting with id: " + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Job posting with id: " + id + " was not found."
+                        )
+                );
 
         jobPostingMapper.updateEntityFromDto(jobPostingRequestDto, jobPosting);
 
@@ -82,6 +92,12 @@ public class JobPostingServiceImpl implements JobPostingService {
 
     @Override
     public List<JobPostingCompactDto> getAllJobPostingsByCompanyId(UUID companyId) {
+        if (!companyRepository.existsById(companyId)) {
+            throw new ResourceNotFoundException(
+                    "Company with id " + companyId + " was not found."
+            );
+        }
+
         List<JobPosting> jobPostings = jobPostingRepository.findAllByCompanyId(companyId);
         Set<UUID> jobPostingIds =  Set.copyOf(applicationRepository.findAllAppliedJobPostingIds());
 

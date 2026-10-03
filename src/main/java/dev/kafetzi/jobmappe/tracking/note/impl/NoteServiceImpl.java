@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.note.impl;
 
+import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.note.NoteMapper;
 import dev.kafetzi.jobmappe.tracking.application.Application;
 import dev.kafetzi.jobmappe.tracking.note.Note;
@@ -29,6 +30,12 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<NoteCompactDto> getAllNotes(UUID applicationId) {
+        if (!applicationRepository.existsById(applicationId)) {
+            throw new ResourceNotFoundException(
+                    "Application with id " + applicationId + " was not found."
+            );
+        }
+
         return noteRepository.findAllByApplicationIdWithNoteCategory(applicationId)
                 .stream()
                 .map(noteMapper::toNoteCompactDto)
@@ -38,7 +45,10 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public NoteDetailDto getNote(UUID id) {
         Note note = noteRepository.findByIdWithNoteCategory(id)
-                .orElseThrow(() -> new IllegalArgumentException("Note not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Note with id " + id + " was not found."
+                        )
+                );
 
         return noteMapper.toNoteDetailDto(note);
     }
@@ -50,12 +60,18 @@ public class NoteServiceImpl implements NoteService {
 
         if (noteRequestDto.noteCategoryId() != null) {
             NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
-                    .orElseThrow(() -> new IllegalArgumentException("Note category not found with id: " + noteRequestDto.noteCategoryId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Note category with id " + noteRequestDto.noteCategoryId() + " was not found."
+                            )
+                    );
             note.setNoteCategory(noteCategory);
         }
 
         Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new IllegalArgumentException("Application not found with id: " + applicationId));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Application with id " + applicationId + " was not found."
+                        )
+                );
 
         note.setApplication(application);
 
@@ -68,11 +84,17 @@ public class NoteServiceImpl implements NoteService {
     @Transactional
     public NoteDetailDto updateNote(UUID id, NoteRequestDto noteRequestDto) {
         Note note = noteRepository.findByIdWithNoteCategory(id)
-                .orElseThrow(() -> new IllegalArgumentException("Note not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Note with id " + id + " was not found."
+                        )
+                );
 
         if (noteRequestDto.noteCategoryId() != null) {
             NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
-                    .orElseThrow(() -> new IllegalArgumentException("Note category not found with id: " + noteRequestDto.noteCategoryId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Note category with id " + noteRequestDto.noteCategoryId() + " was not found."
+                            )
+                    );
             note.setNoteCategory(noteCategory);
         } else {
             note.setNoteCategory(null);

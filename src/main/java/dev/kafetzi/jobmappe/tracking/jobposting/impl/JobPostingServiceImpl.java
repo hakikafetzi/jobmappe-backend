@@ -81,7 +81,7 @@ public class JobPostingServiceImpl implements JobPostingService {
     public JobPostingResponseDto updateJobPosting(UUID id, JobPostingRequestDto jobPostingRequestDto) {
         JobPosting jobPosting = jobPostingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Job posting with id: " + id + " was not found."
+                        "Job posting with id " + id + " was not found."
                         )
                 );
 

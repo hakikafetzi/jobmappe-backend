@@ -69,7 +69,7 @@ public class CompanyServiceImpl implements CompanyService {
 
         if(companyRepository.existsByNameIgnoreCase(normalizedCompanyName)) {
             throw new ConflictException(
-                    "Company with name " + normalizedCompanyName + " already exists."
+                    "Company with name '" + normalizedCompanyName + "' already exists."
             );
         }
 
@@ -92,7 +92,7 @@ public class CompanyServiceImpl implements CompanyService {
 
         if(companyRepository.existsByNameIgnoreCaseAndIdNot(normalizedRequestName, id)) {
             throw new ConflictException(
-                    "Company with name " + normalizedRequestName + " already exists."
+                    "Company with name '" + normalizedRequestName + "' already exists."
             );
         }
 

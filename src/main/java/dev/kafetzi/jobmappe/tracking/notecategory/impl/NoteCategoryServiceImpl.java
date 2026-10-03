@@ -36,7 +36,7 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
     public NoteCategoryDto getNoteCategoryById(UUID id) {
         NoteCategory noteCategory = noteCategoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Note Category with id " + id + " was not found."
+                        "Note category with id " + id + " was not found."
                         )
                 );
 
@@ -52,7 +52,7 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
 
         if (noteCategoryRepository.existsByNameIgnoreCase(normalizedCategoryName)) {
             throw new ConflictException(
-                    "Note category with name " + normalizedCategoryName + " already exists."
+                    "Note category with name '" + normalizedCategoryName + "' already exists."
             );
         }
 
@@ -67,7 +67,7 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
     public NoteCategoryDto updateNoteCategory(UUID id, NoteCategoryRequestDto noteCategoryRequestDto) {
         NoteCategory noteCategory = noteCategoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Note Category with id " + id + " was not found."
+                        "Note category with id " + id + " was not found."
                         )
                 );
 
@@ -75,7 +75,7 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
 
         if (noteCategoryRepository.existsByNameIgnoreCaseAndIdNot(normalizedCategoryName, id)) {
             throw new ConflictException(
-                    "Note category with name " + normalizedCategoryName + " already exists."
+                    "Note category with name '" + normalizedCategoryName + "' already exists."
             );
         }
 
@@ -90,7 +90,7 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
     public void deleteNoteCategory(UUID id) {
         NoteCategory noteCategory = noteCategoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Note Category with id " + id + " was not found."
+                        "Note category with id " + id + " was not found."
                         )
                 );
 

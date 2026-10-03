@@ -52,14 +52,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ApplicationResponseDto createApplication(UUID jobPostingId) {
         if (applicationRepository.existsApplicationByJobPostingId(jobPostingId)) {
             throw new ConflictException(
-                    "Application for job posting with ID " + jobPostingId + " already exists."
+                    "Application for job posting with id " + jobPostingId + " already exists."
             );
         }
 
         JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
-                                "Job posting with ID " + jobPostingId + " was not found."
+                                "Job posting with id " + jobPostingId + " was not found."
                         )
                 );
 
@@ -77,7 +77,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ApplicationDetailDto getApplication(UUID id) {
         Application application = applicationRepository.findByIdWithJobPostingAndCompany(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Application with ID " + id + " was not found."
+                        "Application with id " + id + " was not found."
                         )
                 );
 
@@ -89,7 +89,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ApplicationResponseDto updateApplication(UUID id, ApplicationPatchDto applicationPatchDto) {
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Application with ID " + id + " was not found."
+                        "Application with id " + id + " was not found."
                         )
                 );
 

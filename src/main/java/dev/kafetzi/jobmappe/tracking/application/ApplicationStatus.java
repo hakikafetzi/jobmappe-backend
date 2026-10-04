@@ -4,7 +4,7 @@ public enum ApplicationStatus {
     // laufend — auf dem Board
     IN_PROGRESS,   // In Bearbeitung
     APPLIED,       // Beworben
-    SCREENING,     // Vorauswahl
+    WAITING,       // Warten
     INTERVIEW,     // Gespräch
     OFFER,         // Zusage erhalten
 

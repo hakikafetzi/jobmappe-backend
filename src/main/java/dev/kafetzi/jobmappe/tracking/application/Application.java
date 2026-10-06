@@ -1,11 +1,9 @@
 package dev.kafetzi.jobmappe.tracking.application;
 
+import dev.kafetzi.jobmappe.exception.ConflictException;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPosting;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,10 +14,18 @@ import java.util.UUID;
 @Entity
 @Table(name = "applications")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Setter
 public class Application {
+
+    public Application(JobPosting jobPosting) {
+        if (jobPosting == null) {
+            throw new IllegalArgumentException("Job posting cannot be null.");
+        }
+
+        this.jobPosting = jobPosting;
+        this.status = ApplicationStatus.IN_PROGRESS;
+        this.priority = ApplicationPriority.NONE;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,6 +40,7 @@ public class Application {
     @Column(name = "status", nullable = false, length = 50)
     private ApplicationStatus status;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "priority", nullable = false, length = 50)
     private ApplicationPriority priority;
@@ -41,9 +48,11 @@ public class Application {
     @Column(name = "applied_at")
     private LocalDate appliedAt;
 
+    @Setter
     @Column(name = "applied_via")
     private String appliedVia;
 
+    @Setter
     @Column(name = "portal_url", length = 1000)
     private String portalUrl;
 
@@ -57,4 +66,32 @@ public class Application {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public void changeStatus(ApplicationStatus status) {
+        if (status == null) {
+            throw new IllegalArgumentException("Application status cannot be null.");
+        }
+
+        if (!this.status.canTransitionTo(status)) {
+            throw new ConflictException(
+                    "Cannot change application status from " + this.status + " to " + status + "."
+            );
+        }
+
+        if (status == ApplicationStatus.APPLIED && this.appliedAt == null) {
+            this.appliedAt = LocalDate.now();
+        } else if (status == ApplicationStatus.IN_PROGRESS) {
+            this.appliedAt = null;
+            this.appliedVia = null;
+            this.portalUrl = null;
+        }
+
+        if (status.isClosed() && this.closedAt == null) {
+            this.closedAt = LocalDate.now();
+        } else if (!status.isClosed()) {
+            this.closedAt = null;
+        }
+
+        this.status = status;
+    }
 }

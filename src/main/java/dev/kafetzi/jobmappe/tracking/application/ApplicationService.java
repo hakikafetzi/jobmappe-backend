@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface ApplicationService {
     List<ApplicationCompactDto> getAllApplications();
-    ApplicationResponseDto createApplication(UUID jobPostingId);
+    ApplicationResponseDto startApplication(UUID jobPostingId);
     ApplicationDetailDto getApplication(UUID id);
     ApplicationResponseDto updateApplication(UUID id, ApplicationPatchDto applicationPatchDto);
 }

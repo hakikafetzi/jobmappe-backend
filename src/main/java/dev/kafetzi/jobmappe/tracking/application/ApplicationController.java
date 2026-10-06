@@ -45,8 +45,8 @@ public class ApplicationController {
     }
 
     @PostMapping("/api/job-postings/{jobPostingId}/applications")
-    public ResponseEntity<ApplicationResponseDto> createApplication(@PathVariable UUID jobPostingId) {
-        ApplicationResponseDto application = applicationService.createApplication(jobPostingId);
+    public ResponseEntity<ApplicationResponseDto> startApplication(@PathVariable UUID jobPostingId) {
+        ApplicationResponseDto application = applicationService.startApplication(jobPostingId);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()

@@ -4,8 +4,6 @@ import dev.kafetzi.jobmappe.exception.ConflictException;
 import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationMapper;
 import dev.kafetzi.jobmappe.tracking.application.Application;
-import dev.kafetzi.jobmappe.tracking.application.ApplicationPriority;
-import dev.kafetzi.jobmappe.tracking.application.ApplicationStatus;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationDetailDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationPatchDto;
@@ -49,7 +47,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     @Transactional
-    public ApplicationResponseDto createApplication(UUID jobPostingId) {
+    public ApplicationResponseDto startApplication(UUID jobPostingId) {
         if (applicationRepository.existsApplicationByJobPostingId(jobPostingId)) {
             throw new ConflictException(
                     "Application for job posting with id " + jobPostingId + " already exists."
@@ -63,10 +61,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                         )
                 );
 
-        Application application = new Application();
-        application.setJobPosting(jobPosting);
-        application.setStatus(ApplicationStatus.IN_PROGRESS);
-        application.setPriority(ApplicationPriority.NONE);
+        Application application = new Application(jobPosting);
 
         Application savedApplication = applicationRepository.save(application);
 
@@ -93,10 +88,6 @@ public class ApplicationServiceImpl implements ApplicationService {
                         )
                 );
 
-        if (applicationPatchDto.status() != null) {
-            application.setStatus(applicationPatchDto.status());
-        }
-
         if (applicationPatchDto.priority() != null) {
             application.setPriority(applicationPatchDto.priority());
         }
@@ -107,6 +98,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         if (applicationPatchDto.portalUrl() != null) {
             application.setPortalUrl(applicationPatchDto.portalUrl());
+        }
+
+        if (applicationPatchDto.status() != null) {
+            application.changeStatus(applicationPatchDto.status());
         }
 
         return applicationMapper.toResponseDto(application);

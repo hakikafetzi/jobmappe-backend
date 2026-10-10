@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.application.dto;
 
+import dev.kafetzi.jobmappe.tracking.application.ApplicationChannel;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationPriority;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationStatus;
 import jakarta.validation.constraints.Pattern;
@@ -10,9 +11,7 @@ public record ApplicationPatchDto(
 
         ApplicationPriority priority,
 
-        @Pattern(regexp = ".*\\S.*", message = "The applied via must not be blank or contain only whitespace")
-        @Size(max = 255, message = "The applied via must not exceed 255 characters")
-        String appliedVia,
+        ApplicationChannel appliedVia,
 
         @Pattern(regexp = ".*\\S.*", message = "The portal url must not be blank or contain only whitespace")
         @Size(max = 1000, message = "The portal url must not exceed 1000 characters")

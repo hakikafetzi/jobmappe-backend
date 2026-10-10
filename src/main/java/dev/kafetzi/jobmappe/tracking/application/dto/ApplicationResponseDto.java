@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.application.dto;
 
+import dev.kafetzi.jobmappe.tracking.application.ApplicationChannel;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationPriority;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationStatus;
 
@@ -12,7 +13,7 @@ public record ApplicationResponseDto(
         ApplicationStatus status,
         ApplicationPriority priority,
         LocalDate appliedAt,
-        String appliedVia,
+        ApplicationChannel appliedVia,
         String portalUrl,
         LocalDate closedAt,
         LocalDateTime createdAt

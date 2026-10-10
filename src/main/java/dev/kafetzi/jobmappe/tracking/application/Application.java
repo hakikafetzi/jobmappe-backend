@@ -49,8 +49,9 @@ public class Application {
     private LocalDate appliedAt;
 
     @Setter
-    @Column(name = "applied_via")
-    private String appliedVia;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "applied_via", length = 50)
+    private ApplicationChannel appliedVia;
 
     @Setter
     @Column(name = "portal_url", length = 1000)

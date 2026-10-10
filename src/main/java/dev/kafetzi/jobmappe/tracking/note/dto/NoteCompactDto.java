@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record NoteCompactDto(
         UUID id,
-        String note_category,
+        String noteCategory,
         String title,
         LocalDateTime createdAt
 ) {

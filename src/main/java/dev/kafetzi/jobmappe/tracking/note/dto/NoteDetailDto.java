@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record NoteDetailDto(
         UUID id,
-        String note_category,
+        String noteCategory,
         String title,
         String content,
         LocalDateTime createdAt,

@@ -65,7 +65,7 @@ public class JobPostingController {
         return ResponseEntity.ok(jobPostings);
     }
 
-    @PatchMapping("/api/job-postings/{id}")
+    @PatchMapping("/api/job-postings/{id}/archive")
     public ResponseEntity<JobPostingResponseDto> setArchived(
             @PathVariable UUID id,
             @Valid @RequestBody JobPostingArchiveDto jobPostingArchiveDto

@@ -73,8 +73,7 @@ public class JobPostingMapperImpl implements JobPostingMapper {
                 jobPosting.getCompany().getName(),
                 jobPosting.getLocation(),
                 hasApplication,
-                jobPosting.getCreatedAt(),
-                jobPosting.getArchivedAt()
+                jobPosting.getCreatedAt()
         );
     }
 

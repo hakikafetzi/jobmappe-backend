@@ -54,8 +54,7 @@ public class JobPostingServiceImpl implements JobPostingService {
                         )
                 );
 
-        JobPosting jobPosting = jobPostingMapper.toEntity(jobPostingRequestDto);
-        jobPosting.setCompany(company);
+        JobPosting jobPosting = jobPostingMapper.toEntity(jobPostingRequestDto, company);
 
         JobPosting jobPostingSaved = jobPostingRepository.save(jobPosting);
 

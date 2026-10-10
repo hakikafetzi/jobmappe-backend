@@ -3,7 +3,6 @@ package dev.kafetzi.jobmappe.tracking.note;
 import dev.kafetzi.jobmappe.tracking.application.Application;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategory;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,10 +15,15 @@ import java.util.UUID;
 @Entity
 @Table(name = "notes")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Setter
 public class Note {
+    public Note(Application application) {
+        if (application == null) {
+            throw new IllegalArgumentException("Application cannot be null");
+        }
+
+        this.application = application;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,13 +33,16 @@ public class Note {
     @JoinColumn(name = "application_id",  nullable = false)
     private Application application;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "note_category_id")
     private NoteCategory noteCategory;
 
+    @Setter
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Setter
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 

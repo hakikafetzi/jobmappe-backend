@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.note.impl;
 
+import dev.kafetzi.jobmappe.tracking.application.Application;
 import dev.kafetzi.jobmappe.tracking.note.NoteMapper;
 import dev.kafetzi.jobmappe.tracking.note.Note;
 import dev.kafetzi.jobmappe.tracking.note.dto.NoteCompactDto;
@@ -32,8 +33,8 @@ public class NoteMapperImpl implements NoteMapper {
     }
 
     @Override
-    public Note toEntity(NoteRequestDto noteRequestDto) {
-        Note note = new Note();
+    public Note toEntity(NoteRequestDto noteRequestDto, Application application) {
+        Note note = new Note(application);
         note.setTitle(noteRequestDto.title());
         note.setContent(noteRequestDto.content());
 

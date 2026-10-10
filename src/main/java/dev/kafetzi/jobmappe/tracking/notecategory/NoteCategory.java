@@ -1,7 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.notecategory;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,9 +13,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "note_categories")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Setter
 public class NoteCategory {
 
     @Id
@@ -24,6 +21,7 @@ public class NoteCategory {
     @Column(name = "id")
     private UUID id;
 
+    @Setter
     @Column(name = "name", nullable = false)
     private String name;
 

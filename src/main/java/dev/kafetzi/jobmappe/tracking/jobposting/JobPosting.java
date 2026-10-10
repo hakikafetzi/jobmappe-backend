@@ -13,10 +13,16 @@ import java.util.UUID;
 @Entity
 @Table(name = "job_postings")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Setter
 public class JobPosting {
+    public JobPosting(Company company) {
+        if (company == null) {
+            throw new IllegalArgumentException("Company cannot be null");
+        }
+
+        this.company = company;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
@@ -26,22 +32,28 @@ public class JobPosting {
     @JoinColumn(name = "company_id",  nullable = false)
     private Company company;
 
+    @Setter
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Setter
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Setter
     @Column(name = "location")
     private String location;
 
+    @Setter
     @Column(name = "url", length = 1000, nullable = false)
     private String url;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 50)
     private JobPostingStatus status;
 
+    @Setter
     @Column(name = "published_at")
     private LocalDate publishedAt;
 

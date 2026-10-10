@@ -11,13 +11,13 @@ import java.util.UUID;
 @Entity
 @Table(name = "companies")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
+    @Setter(AccessLevel.NONE)
     private UUID id;
 
     @Column(name = "name", nullable = false)
@@ -35,10 +35,12 @@ public class Company {
     @Column(name = "city")
     private String city;
 
+    @Setter(AccessLevel.NONE)
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Setter(AccessLevel.NONE)
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;

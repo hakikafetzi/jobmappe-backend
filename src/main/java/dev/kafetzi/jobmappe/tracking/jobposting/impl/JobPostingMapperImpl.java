@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.jobposting.impl;
 
+import dev.kafetzi.jobmappe.tracking.company.Company;
 import dev.kafetzi.jobmappe.tracking.company.CompanyMapper;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingMapper;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPosting;
@@ -32,8 +33,8 @@ public class JobPostingMapperImpl implements JobPostingMapper {
     }
 
     @Override
-    public JobPosting toEntity(JobPostingRequestDto jobPostingRequestDto) {
-        JobPosting jobPosting = new JobPosting();
+    public JobPosting toEntity(JobPostingRequestDto jobPostingRequestDto, Company company) {
+        JobPosting jobPosting = new JobPosting(company);
 
         jobPosting.setTitle(jobPostingRequestDto.title());
         jobPosting.setDescription(jobPostingRequestDto.description());

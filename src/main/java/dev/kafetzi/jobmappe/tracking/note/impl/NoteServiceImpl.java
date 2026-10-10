@@ -56,7 +56,13 @@ public class NoteServiceImpl implements NoteService {
     @Override
     @Transactional
     public NoteDetailDto createNote(UUID applicationId, NoteRequestDto noteRequestDto) {
-        Note note = noteMapper.toEntity(noteRequestDto);
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                                "Application with id " + applicationId + " was not found."
+                        )
+                );
+
+        Note note = noteMapper.toEntity(noteRequestDto, application);
 
         if (noteRequestDto.noteCategoryId() != null) {
             NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
@@ -66,14 +72,6 @@ public class NoteServiceImpl implements NoteService {
                     );
             note.setNoteCategory(noteCategory);
         }
-
-        Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Application with id " + applicationId + " was not found."
-                        )
-                );
-
-        note.setApplication(application);
 
         Note savedNote = noteRepository.save(note);
 

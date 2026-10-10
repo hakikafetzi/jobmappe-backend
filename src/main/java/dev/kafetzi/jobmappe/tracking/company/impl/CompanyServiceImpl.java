@@ -43,7 +43,7 @@ public class CompanyServiceImpl implements CompanyService {
         return companies.stream()
                 .map(company -> {
                     long jobCount = jobCountsByCompanyId.getOrDefault(company.getId(), 0L);
-                    return companyMapper.toCompactDto(company, (int) jobCount);
+                    return companyMapper.toCompactDto(company, jobCount);
                 })
                 .toList();
     }
@@ -56,7 +56,7 @@ public class CompanyServiceImpl implements CompanyService {
                         )
                 );
 
-        int jobCount = (int) jobPostingRepository.countJobPostingsByCompanyId(company.getId());
+        long jobCount = jobPostingRepository.countJobPostingsByCompanyId(company.getId());
 
         return companyMapper.toDetailDto(company, jobCount);
     }

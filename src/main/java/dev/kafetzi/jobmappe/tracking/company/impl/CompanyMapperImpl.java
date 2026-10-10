@@ -24,7 +24,7 @@ public class CompanyMapperImpl implements CompanyMapper {
     }
 
     @Override
-    public CompanyCompactDto toCompactDto(Company company, int jobCount) {
+    public CompanyCompactDto toCompactDto(Company company, long jobCount) {
         return new CompanyCompactDto(
                 company.getId(),
                 company.getName(),
@@ -33,7 +33,7 @@ public class CompanyMapperImpl implements CompanyMapper {
     }
 
     @Override
-    public CompanyDetailDto toDetailDto(Company company, int jobCount) {
+    public CompanyDetailDto toDetailDto(Company company, long jobCount) {
         return new CompanyDetailDto(
                 company.getId(),
                 company.getName(),

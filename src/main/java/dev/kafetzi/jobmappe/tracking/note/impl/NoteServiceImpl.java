@@ -102,4 +102,16 @@ public class NoteServiceImpl implements NoteService {
 
         return noteMapper.toNoteDetailDto(note);
     }
+
+    @Override
+    @Transactional
+    public void deleteNote(UUID id) {
+        Note note = noteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Note with id " + id + " was not found."
+                        )
+                );
+
+        noteRepository.delete(note);
+    }
 }

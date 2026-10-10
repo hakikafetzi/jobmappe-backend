@@ -16,7 +16,7 @@ public record ApplicationDetailDto(
         ApplicationPriority priority,
         LocalDate appliedAt,
         String appliedVia,
-        String portal,
+        String portalUrl,
         LocalDate closedAt
 ) {
 }

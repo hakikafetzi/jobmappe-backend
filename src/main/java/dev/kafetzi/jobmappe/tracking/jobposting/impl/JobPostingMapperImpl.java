@@ -28,7 +28,8 @@ public class JobPostingMapperImpl implements JobPostingMapper {
                 jobPosting.getLocation(),
                 jobPosting.getUrl(),
                 jobPosting.getStatus(),
-                jobPosting.getPublishedAt()
+                jobPosting.getPublishedAt(),
+                jobPosting.getArchivedAt()
         );
     }
 
@@ -59,7 +60,8 @@ public class JobPostingMapperImpl implements JobPostingMapper {
                 applicationId != null,
                 applicationId,
                 jobPosting.getPublishedAt(),
-                jobPosting.getCreatedAt()
+                jobPosting.getCreatedAt(),
+                jobPosting.getArchivedAt()
         );
     }
 
@@ -71,7 +73,8 @@ public class JobPostingMapperImpl implements JobPostingMapper {
                 jobPosting.getCompany().getName(),
                 jobPosting.getLocation(),
                 hasApplication,
-                jobPosting.getCreatedAt()
+                jobPosting.getCreatedAt(),
+                jobPosting.getArchivedAt()
         );
     }
 

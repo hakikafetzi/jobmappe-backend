@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.jobposting;
 
+import dev.kafetzi.jobmappe.exception.ConflictException;
 import dev.kafetzi.jobmappe.tracking.company.Company;
 import jakarta.persistence.*;
 import lombok.*;
@@ -57,6 +58,9 @@ public class JobPosting {
     @Column(name = "published_at")
     private LocalDate publishedAt;
 
+    @Column(name = "archived_at")
+    private LocalDate archivedAt;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -64,4 +68,20 @@ public class JobPosting {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public void archive() {
+        if (this.archivedAt == null) {
+            this.archivedAt = LocalDate.now();
+        } else {
+            throw new ConflictException("Job posting with ID " + this.id + " is already archived");
+        }
+    }
+
+    public void restore() {
+        if (this.archivedAt != null) {
+            this.archivedAt = null;
+        } else {
+            throw new ConflictException("Job posting with ID " + this.id + " is not archived");
+        }
+    }
 }

@@ -18,6 +18,7 @@ public record JobPostingDetailDto(
         Boolean hasApplication,
         UUID applicationId,
         LocalDate publishedAt,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDate archivedAt
 ) {
 }

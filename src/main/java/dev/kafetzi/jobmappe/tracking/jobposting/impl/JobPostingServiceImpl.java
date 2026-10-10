@@ -1,13 +1,11 @@
 package dev.kafetzi.jobmappe.tracking.jobposting.impl;
 
+import dev.kafetzi.jobmappe.exception.ConflictException;
 import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingMapper;
 import dev.kafetzi.jobmappe.tracking.company.Company;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPosting;
-import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingCompactDto;
-import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingDetailDto;
-import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingRequestDto;
-import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingResponseDto;
+import dev.kafetzi.jobmappe.tracking.jobposting.dto.*;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.company.CompanyRepository;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
@@ -109,5 +107,29 @@ public class JobPostingServiceImpl implements JobPostingService {
                         )
                 )
                 .toList();
+    }
+
+    @Transactional
+    @Override
+    public JobPostingResponseDto setArchived(UUID id, JobPostingArchiveDto jobPostingArchiveDto) {
+        JobPosting jobPosting = jobPostingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Job posting with id " + id + " was not found."
+                        )
+                );
+
+        if (jobPostingArchiveDto.archived() && applicationRepository.existsApplicationByJobPostingId(id)) {
+            throw new ConflictException(
+                    "Cannot archive job posting with id " + id + " because it has an associated application."
+            );
+        }
+
+        if (jobPostingArchiveDto.archived()) {
+            jobPosting.archive();
+        } else {
+            jobPosting.restore();
+        }
+
+        return jobPostingMapper.toDto(jobPosting);
     }
 }

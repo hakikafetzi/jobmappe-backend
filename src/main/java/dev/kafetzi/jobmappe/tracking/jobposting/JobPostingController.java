@@ -1,9 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.jobposting;
 
-import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingCompactDto;
-import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingDetailDto;
-import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingRequestDto;
-import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingResponseDto;
+import dev.kafetzi.jobmappe.tracking.jobposting.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -66,5 +63,15 @@ public class JobPostingController {
         List<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostingsByCompanyId(companyId);
 
         return ResponseEntity.ok(jobPostings);
+    }
+
+    @PatchMapping("/api/job-postings/{id}")
+    public ResponseEntity<JobPostingResponseDto> setArchived(
+            @PathVariable UUID id,
+            @Valid @RequestBody JobPostingArchiveDto jobPostingArchiveDto
+    ) {
+        JobPostingResponseDto jobPosting = jobPostingService.setArchived(id, jobPostingArchiveDto);
+
+        return ResponseEntity.ok(jobPosting);
     }
 }

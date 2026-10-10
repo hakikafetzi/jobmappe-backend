@@ -20,6 +20,7 @@ CREATE TABLE job_postings (
                               url          VARCHAR(1000) NOT NULL,
                               status       VARCHAR(50)   NOT NULL,
                               published_at DATE,
+                              archived_at  DATE,
                               created_at   TIMESTAMP     NOT NULL,
                               updated_at   TIMESTAMP
 );

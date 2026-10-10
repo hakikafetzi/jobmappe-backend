@@ -61,6 +61,12 @@ public class ApplicationServiceImpl implements ApplicationService {
                         )
                 );
 
+        if (jobPosting.getArchivedAt() != null) {
+            throw new ConflictException(
+                    "Job posting with id " + jobPostingId + " is archived and cannot be applied to."
+            );
+        }
+
         Application application = new Application(jobPosting);
 
         Application savedApplication = applicationRepository.save(application);

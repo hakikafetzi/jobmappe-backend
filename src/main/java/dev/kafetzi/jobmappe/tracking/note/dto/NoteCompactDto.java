@@ -7,6 +7,6 @@ public record NoteCompactDto(
         UUID id,
         String note_category,
         String title,
-        LocalDateTime created_at
+        LocalDateTime createdAt
 ) {
 }

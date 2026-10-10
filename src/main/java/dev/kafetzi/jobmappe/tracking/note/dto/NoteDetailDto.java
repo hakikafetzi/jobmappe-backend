@@ -8,7 +8,7 @@ public record NoteDetailDto(
         String note_category,
         String title,
         String content,
-        LocalDateTime created_at,
-        LocalDateTime updated_at
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
 }

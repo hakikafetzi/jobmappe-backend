@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,8 +21,8 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
 
     boolean existsApplicationByJobPostingId(UUID jobPostingId);
 
-    @Query("SELECT a.jobPosting.id FROM Application a")
-    List<UUID> findAllAppliedJobPostingIds();
+    @Query("SELECT a.jobPosting.id FROM Application a WHERE a.jobPosting.id IN :jobPostingIds")
+    List<UUID> findAllAppliedJobPostingIds(@Param("jobPostingIds") Collection<UUID> jobPostingIds);
 
     @Query("SELECT a.id FROM Application a WHERE a.jobPosting.id = :jobPostingId")
     Optional<UUID> findApplicationIdByJobPostingId(@Param("jobPostingId") UUID jobPostingId);

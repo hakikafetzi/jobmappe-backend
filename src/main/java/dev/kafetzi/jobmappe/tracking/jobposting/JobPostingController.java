@@ -3,12 +3,13 @@ package dev.kafetzi.jobmappe.tracking.jobposting;
 import dev.kafetzi.jobmappe.tracking.jobposting.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -17,8 +18,8 @@ public class JobPostingController {
     private final JobPostingService jobPostingService;
 
     @GetMapping("/api/job-postings")
-    public ResponseEntity<List<JobPostingCompactDto>> getAllJobPostings() {
-        List<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostings();
+    public ResponseEntity<Page<JobPostingCompactDto>> getAllJobPostings(Pageable pageable) {
+        Page<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostings(pageable);
 
         return ResponseEntity.ok(jobPostings);
     }
@@ -57,10 +58,11 @@ public class JobPostingController {
     }
 
     @GetMapping("/api/companies/{companyId}/job-postings")
-    public ResponseEntity<List<JobPostingCompactDto>> getAllJobPostingsByCompany(
-            @PathVariable UUID companyId
+    public ResponseEntity<Page<JobPostingCompactDto>> getAllJobPostingsByCompany(
+            @PathVariable UUID companyId,
+            Pageable pageable
     ) {
-        List<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostingsByCompanyId(companyId);
+        Page<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostingsByCompanyId(companyId, pageable);
 
         return ResponseEntity.ok(jobPostings);
     }

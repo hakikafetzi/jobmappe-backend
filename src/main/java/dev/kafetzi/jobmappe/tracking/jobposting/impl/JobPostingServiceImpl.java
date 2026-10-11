@@ -12,6 +12,8 @@ import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,19 +30,10 @@ public class JobPostingServiceImpl implements JobPostingService {
     private final JobPostingMapper jobPostingMapper;
 
     @Override
-    public List<JobPostingCompactDto> getAllJobPostings() {
-        List<JobPosting> jobPostings = jobPostingRepository.findAllWithCompany();
-        Set<UUID> jobPostingIds =  Set.copyOf(applicationRepository.findAllAppliedJobPostingIds());
+    public Page<JobPostingCompactDto> getAllJobPostings(Pageable pageable) {
+        Page<JobPosting> jobPostings = jobPostingRepository.findAllWithCompany(pageable);
 
-        return jobPostings
-                .stream()
-                .map(
-                        jobPosting -> jobPostingMapper.toCompactDto(
-                                jobPosting,
-                                jobPostingIds.contains(jobPosting.getId())
-                        )
-                )
-                .toList();
+        return mapToCompactDtoPage(jobPostings);
     }
 
     @Override
@@ -88,25 +81,16 @@ public class JobPostingServiceImpl implements JobPostingService {
     }
 
     @Override
-    public List<JobPostingCompactDto> getAllJobPostingsByCompanyId(UUID companyId) {
+    public Page<JobPostingCompactDto> getAllJobPostingsByCompanyId(UUID companyId, Pageable pageable) {
         if (!companyRepository.existsById(companyId)) {
             throw new ResourceNotFoundException(
                     "Company with id " + companyId + " was not found."
             );
         }
 
-        List<JobPosting> jobPostings = jobPostingRepository.findAllByCompanyId(companyId);
-        Set<UUID> jobPostingIds =  Set.copyOf(applicationRepository.findAllAppliedJobPostingIds());
+        Page<JobPosting> jobPostings = jobPostingRepository.findAllByCompanyId(companyId, pageable);
 
-        return jobPostings
-                .stream()
-                .map(
-                        jobPosting -> jobPostingMapper.toCompactDto(
-                                jobPosting,
-                                jobPostingIds.contains(jobPosting.getId())
-                        )
-                )
-                .toList();
+        return mapToCompactDtoPage(jobPostings);
     }
 
     @Transactional
@@ -131,5 +115,28 @@ public class JobPostingServiceImpl implements JobPostingService {
         }
 
         return jobPostingMapper.toDto(jobPosting);
+    }
+
+    private Page<JobPostingCompactDto> mapToCompactDtoPage(Page<JobPosting> jobPostings) {
+
+        List<UUID> jobPostingIds = jobPostings.getContent().stream()
+                .map(JobPosting::getId)
+                .toList();
+
+        Set<UUID> jobPostingAppliedIds;
+
+        if (jobPostingIds.isEmpty()) {
+            jobPostingAppliedIds = Set.of();
+        } else {
+            jobPostingAppliedIds = Set.copyOf(applicationRepository.findAllAppliedJobPostingIds(jobPostingIds));
+        }
+
+        return jobPostings
+                .map(
+                        jobPosting -> jobPostingMapper.toCompactDto(
+                                jobPosting,
+                                jobPostingAppliedIds.contains(jobPosting.getId())
+                        )
+                );
     }
 }

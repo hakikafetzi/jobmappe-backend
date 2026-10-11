@@ -1,15 +1,16 @@
 package dev.kafetzi.jobmappe.tracking.jobposting;
 
 import dev.kafetzi.jobmappe.tracking.jobposting.dto.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface JobPostingService {
-    List<JobPostingCompactDto> getAllJobPostings();
+    Page<JobPostingCompactDto> getAllJobPostings(Pageable pageable);
     JobPostingDetailDto getJobPosting(UUID postingId);
     JobPostingResponseDto createJobPosting(UUID companyId, JobPostingRequestDto jobPostingRequestDto);
     JobPostingResponseDto updateJobPosting(UUID id, JobPostingRequestDto jobPostingRequestDto);
-    List<JobPostingCompactDto> getAllJobPostingsByCompanyId(UUID companyId);
+    Page<JobPostingCompactDto> getAllJobPostingsByCompanyId(UUID companyId, Pageable pageable);
     JobPostingResponseDto setArchived(UUID id, JobPostingArchiveDto jobPostingArchiveDto);
 }

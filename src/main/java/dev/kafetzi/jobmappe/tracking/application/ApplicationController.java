@@ -6,12 +6,13 @@ import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationPatchDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,8 +22,8 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @GetMapping("/api/applications")
-    public ResponseEntity<List<ApplicationCompactDto>> getAllApplications() {
-        List<ApplicationCompactDto> applications = applicationService.getAllApplications();
+    public ResponseEntity<Page<ApplicationCompactDto>> getAllApplications(Pageable pageable) {
+        Page<ApplicationCompactDto> applications = applicationService.getAllApplications(pageable);
 
         return ResponseEntity.ok(applications);
     }

@@ -12,11 +12,12 @@ import dev.kafetzi.jobmappe.tracking.application.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationService;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPosting;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,8 +29,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationMapper applicationMapper;
 
     @Override
-    public List<ApplicationCompactDto> getAllApplications() {
-        return applicationRepository.findAllWithJobPostingAndCompany().stream()
+    public Page<ApplicationCompactDto> getAllApplications(Pageable pageable) {
+        return applicationRepository.findAllWithJobPostingAndCompany(pageable)
                 .map(application -> {
                     Integer daysSinceApplication = null;
 
@@ -41,8 +42,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                     }
 
                     return applicationMapper.toCompactDto(application, daysSinceApplication);
-                })
-                .toList();
+                });
     }
 
     @Override

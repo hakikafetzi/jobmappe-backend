@@ -1,5 +1,7 @@
 package dev.kafetzi.jobmappe.tracking.application;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,8 +15,11 @@ import java.util.UUID;
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, UUID> {
 
-    @Query("SELECT a FROM Application a JOIN FETCH a.jobPosting jp JOIN FETCH jp.company c")
-    List<Application> findAllWithJobPostingAndCompany();
+    @Query(
+            value = "SELECT a FROM Application a JOIN FETCH a.jobPosting jp JOIN FETCH jp.company c",
+            countQuery = "SELECT COUNT(a) FROM Application a"
+    )
+    Page<Application> findAllWithJobPostingAndCompany(Pageable pageable);
 
     @Query("SELECT a FROM Application a JOIN FETCH a.jobPosting jp JOIN FETCH jp.company c WHERE a.id = :id")
     Optional<Application> findByIdWithJobPostingAndCompany(@Param("id") UUID id);

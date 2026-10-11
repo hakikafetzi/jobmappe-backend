@@ -3,14 +3,11 @@ package dev.kafetzi.jobmappe.tracking.jobposting.impl;
 import dev.kafetzi.jobmappe.common.pagination.PageableUtils;
 import dev.kafetzi.jobmappe.exception.ConflictException;
 import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
-import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingMapper;
+import dev.kafetzi.jobmappe.tracking.jobposting.*;
 import dev.kafetzi.jobmappe.tracking.company.Company;
-import dev.kafetzi.jobmappe.tracking.jobposting.JobPosting;
 import dev.kafetzi.jobmappe.tracking.jobposting.dto.*;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.company.CompanyRepository;
-import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
-import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,8 +28,16 @@ public class JobPostingServiceImpl implements JobPostingService {
     private final JobPostingMapper jobPostingMapper;
 
     @Override
-    public Page<JobPostingCompactDto> getAllJobPostings(Pageable pageable) {
-        Page<JobPosting> jobPostings = jobPostingRepository.findAllWithCompany(PageableUtils.withStableSort(pageable));
+    public Page<JobPostingCompactDto> getAllJobPostings(JobPostingFilter filter, Pageable pageable) {
+        Pageable stablePageable = PageableUtils.withStableSort(pageable);
+
+        Page<JobPosting> jobPostings = switch (filter) {
+            case ALL -> jobPostingRepository.findAllWithCompany(stablePageable);
+            case INACTIVE -> jobPostingRepository.findAllByStatus(JobPostingStatus.INACTIVE, stablePageable);
+            case ARCHIVED -> jobPostingRepository.findAllByArchivedAtIsNotNull(stablePageable);
+            case OPEN -> jobPostingRepository.findAllWithoutApplications(stablePageable);
+            case APPLIED -> jobPostingRepository.findAllWithApplications(stablePageable);
+        };
 
         return mapToCompactDtoPage(jobPostings);
     }

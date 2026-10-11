@@ -3,6 +3,7 @@ package dev.kafetzi.jobmappe.tracking.jobposting;
 import dev.kafetzi.jobmappe.tracking.jobposting.projection.CountByCompanyProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -35,4 +36,24 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, UUID> {
     List<CountByCompanyProjection> countJobPostingsPerCompanyIds(@Param("companyIds") Collection<UUID> companyIds);
 
     long countJobPostingsByCompanyId(UUID companyId);
+
+    @EntityGraph(attributePaths = "company")
+    Page<JobPosting> findAllByStatus(JobPostingStatus status, Pageable pageable);
+
+    @EntityGraph(attributePaths = "company")
+    Page<JobPosting> findAllByArchivedAtIsNotNull(Pageable pageable);
+
+    @Query(
+            value = "SELECT j FROM JobPosting j WHERE NOT EXISTS (SELECT a.id FROM Application a WHERE a.jobPosting = j)",
+            countQuery = "SELECT COUNT(j) FROM JobPosting j WHERE NOT EXISTS (SELECT a.id FROM Application a WHERE a.jobPosting = j)"
+    )
+    @EntityGraph(attributePaths = "company")
+    Page<JobPosting> findAllWithoutApplications(Pageable pageable);
+
+    @Query(
+            value = "SELECT j FROM JobPosting j WHERE EXISTS (SELECT a.id FROM Application a WHERE a.jobPosting = j)",
+            countQuery = "SELECT COUNT(j) FROM JobPosting j WHERE EXISTS (SELECT a.id FROM Application a WHERE a.jobPosting = j)"
+    )
+    @EntityGraph(attributePaths = "company")
+    Page<JobPosting> findAllWithApplications(Pageable pageable);
 }

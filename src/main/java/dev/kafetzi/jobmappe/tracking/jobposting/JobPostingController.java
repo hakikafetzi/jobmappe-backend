@@ -22,13 +22,15 @@ public class JobPostingController {
 
     @GetMapping("/api/job-postings")
     public ResponseEntity<PagedResponse<JobPostingCompactDto>> getAllJobPostings(
+            @RequestParam(name = "filter", defaultValue = "ALL")
+            JobPostingFilter filter,
             @SortDefault(
                     sort = {"createdAt", "id"},
                     direction = Sort.Direction.DESC
             )
             Pageable pageable
     ) {
-        Page<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostings(pageable);
+        Page<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostings(filter, pageable);
 
         return ResponseEntity.ok(PagedResponse.from(jobPostings));
     }

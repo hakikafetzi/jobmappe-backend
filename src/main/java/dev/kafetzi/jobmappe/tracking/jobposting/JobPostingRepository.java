@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,8 +23,8 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, UUID> {
     @Query("SELECT j FROM JobPosting j LEFT JOIN FETCH j.company WHERE j.company.id = :companyId")
     List<JobPosting> findAllByCompanyId(@Param("companyId") UUID companyId);
 
-    @Query("SELECT j.company.id AS companyId, COUNT(j) AS count FROM JobPosting j GROUP BY j.company.id")
-    List<CountByCompanyProjection> countJobPostingsPerCompany();
+    @Query("SELECT j.company.id AS companyId, COUNT(j) AS count FROM JobPosting j WHERE j.company.id IN :uuids GROUP BY j.company.id")
+    List<CountByCompanyProjection> countJobPostingsPerCompanyIds(@Param("uuids") Collection<UUID> uuids);
 
     long countJobPostingsByCompanyId(UUID companyId);
 }

@@ -6,12 +6,13 @@ import dev.kafetzi.jobmappe.tracking.company.dto.CompanyResponseDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import org.springframework.data.domain.Pageable;
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,8 +23,8 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @GetMapping
-    public ResponseEntity<List<CompanyCompactDto>> getCompanies() {
-        List<CompanyCompactDto> companies = companyService.getCompanies();
+    public ResponseEntity<Page<CompanyCompactDto>> getCompanies(Pageable pageable) {
+        Page<CompanyCompactDto> companies = companyService.getCompanies(pageable);
 
         return ResponseEntity.ok(companies);
     }

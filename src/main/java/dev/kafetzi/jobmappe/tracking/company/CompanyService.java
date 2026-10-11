@@ -4,12 +4,13 @@ import dev.kafetzi.jobmappe.tracking.company.dto.CompanyCompactDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyDetailDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyRequestDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyResponseDto;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface CompanyService {
-    List<CompanyCompactDto> getCompanies();
+    Page<CompanyCompactDto> getCompanies(Pageable pageable);
     CompanyDetailDto getCompany(UUID id);
     CompanyResponseDto createCompany(CompanyRequestDto requestDto);
     CompanyResponseDto updateCompany(UUID id, CompanyRequestDto requestDto);

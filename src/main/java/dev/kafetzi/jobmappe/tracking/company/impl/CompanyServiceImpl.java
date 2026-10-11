@@ -12,11 +12,14 @@ import dev.kafetzi.jobmappe.tracking.company.CompanyRepository;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
 import dev.kafetzi.jobmappe.tracking.company.CompanyService;
 import dev.kafetzi.jobmappe.tracking.jobposting.projection.CountByCompanyProjection;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,22 +33,30 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyMapper companyMapper;
 
     @Override
-    public List<CompanyCompactDto> getCompanies() {
-        List<Company> companies = companyRepository.findAll();
+    public Page<CompanyCompactDto> getCompanies(Pageable pageable) {
+        Page<Company> companies = companyRepository.findAll(pageable);
 
-        Map<UUID, Long> jobCountsByCompanyId = jobPostingRepository.countJobPostingsPerCompany()
-                .stream()
-                .collect(Collectors.toMap(
-                        CountByCompanyProjection::getCompanyId,
-                        CountByCompanyProjection::getCount
-                ));
+        Collection<UUID> companyIds = companies.getContent().stream()
+                .map(Company::getId)
+                .collect(Collectors.toSet());
 
-        return companies.stream()
-                .map(company -> {
+        Map<UUID, Long> jobCountsByCompanyId;
+
+        if (companyIds.isEmpty()) {
+            jobCountsByCompanyId = Map.of();
+        } else {
+            jobCountsByCompanyId = jobPostingRepository.countJobPostingsPerCompanyIds(companyIds)
+                    .stream()
+                    .collect(Collectors.toMap(
+                            CountByCompanyProjection::getCompanyId,
+                            CountByCompanyProjection::getCount
+                    ));
+        }
+
+        return companies.map(company -> {
                     long jobCount = jobCountsByCompanyId.getOrDefault(company.getId(), 0L);
                     return companyMapper.toCompactDto(company, jobCount);
-                })
-                .toList();
+                });
     }
 
     @Override

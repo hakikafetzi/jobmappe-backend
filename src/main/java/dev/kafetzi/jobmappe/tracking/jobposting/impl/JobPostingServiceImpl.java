@@ -35,7 +35,7 @@ public class JobPostingServiceImpl implements JobPostingService {
             case ALL -> jobPostingRepository.findAllWithCompany(stablePageable);
             case INACTIVE -> jobPostingRepository.findAllByStatus(JobPostingStatus.INACTIVE, stablePageable);
             case ARCHIVED -> jobPostingRepository.findAllByArchivedAtIsNotNull(stablePageable);
-            case OPEN -> jobPostingRepository.findAllWithoutApplications(stablePageable);
+            case OPEN -> jobPostingRepository.findAllWithoutApplications(JobPostingStatus.ACTIVE, stablePageable);
             case APPLIED -> jobPostingRepository.findAllWithApplications(stablePageable);
         };
 

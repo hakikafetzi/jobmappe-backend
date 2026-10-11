@@ -44,11 +44,28 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, UUID> {
     Page<JobPosting> findAllByArchivedAtIsNotNull(Pageable pageable);
 
     @Query(
-            value = "SELECT j FROM JobPosting j WHERE NOT EXISTS (SELECT a.id FROM Application a WHERE a.jobPosting = j)",
-            countQuery = "SELECT COUNT(j) FROM JobPosting j WHERE NOT EXISTS (SELECT a.id FROM Application a WHERE a.jobPosting = j)"
+            value = """
+        SELECT j FROM JobPosting j
+        WHERE j.status = :status
+        AND j.archivedAt IS NULL
+        AND NOT EXISTS (
+            SELECT a.id FROM Application a WHERE a.jobPosting = j
+        )
+        """,
+            countQuery = """
+        SELECT COUNT(j) FROM JobPosting j
+        WHERE j.status = :status
+        AND j.archivedAt IS NULL
+        AND NOT EXISTS (
+            SELECT a.id FROM Application a WHERE a.jobPosting = j
+        )
+        """
     )
     @EntityGraph(attributePaths = "company")
-    Page<JobPosting> findAllWithoutApplications(Pageable pageable);
+    Page<JobPosting> findAllWithoutApplications(
+            @Param("status") JobPostingStatus status,
+            Pageable pageable
+    );
 
     @Query(
             value = "SELECT j FROM JobPosting j WHERE EXISTS (SELECT a.id FROM Application a WHERE a.jobPosting = j)",

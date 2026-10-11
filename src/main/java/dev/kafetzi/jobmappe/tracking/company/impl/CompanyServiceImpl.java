@@ -35,7 +35,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Page<CompanyCompactDto> getCompanies(Pageable pageable) {
-        Page<Company> companies = companyRepository.findAll(PageableUtils.withStableSort(pageable));
+        Page<Company> companies = companyRepository.findAll(PageableUtils.withStableSort(pageable, Company.class));
 
         List<UUID> companyIds = companies.getContent().stream()
                 .map(Company::getId)

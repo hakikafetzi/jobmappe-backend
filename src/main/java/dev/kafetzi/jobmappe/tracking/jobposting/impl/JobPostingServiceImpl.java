@@ -29,7 +29,7 @@ public class JobPostingServiceImpl implements JobPostingService {
 
     @Override
     public Page<JobPostingCompactDto> getAllJobPostings(JobPostingFilter filter, Pageable pageable) {
-        Pageable stablePageable = PageableUtils.withStableSort(pageable);
+        Pageable stablePageable = PageableUtils.withStableSort(pageable, JobPosting.class);
 
         Page<JobPosting> jobPostings = switch (filter) {
             case ALL -> jobPostingRepository.findAllWithCompany(stablePageable);
@@ -95,7 +95,7 @@ public class JobPostingServiceImpl implements JobPostingService {
         }
 
         Page<JobPosting> jobPostings = jobPostingRepository.findAllByCompanyId(
-                companyId, PageableUtils.withStableSort(pageable)
+                companyId, PageableUtils.withStableSort(pageable, JobPosting.class)
         );
 
         return mapToCompactDtoPage(jobPostings);

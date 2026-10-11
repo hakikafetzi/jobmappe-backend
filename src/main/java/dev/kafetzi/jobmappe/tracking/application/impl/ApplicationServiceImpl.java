@@ -28,7 +28,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Page<ApplicationCompactDto> getAllApplications(ApplicationStatus status, ApplicationPriority priority, Pageable pageable) {
-        Pageable stablePageable = PageableUtils.withStableSort(pageable);
+        Pageable stablePageable = PageableUtils.withStableSort(pageable, Application.class);
 
         Page<Application> page;
 

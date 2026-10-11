@@ -81,6 +81,16 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(InvalidSortPropertyException.class)
+    public ProblemDetail handleInvalidSortPropertyException(InvalidSortPropertyException exception) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+
+        problemDetail.setTitle("Invalid sort property");
+        problemDetail.setDetail(exception.getMessage());
+
+        return problemDetail;
+    }
+
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleUnexpectedException(Exception exception) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);

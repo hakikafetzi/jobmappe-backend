@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,7 +21,13 @@ public class JobPostingController {
     private final JobPostingService jobPostingService;
 
     @GetMapping("/api/job-postings")
-    public ResponseEntity<PagedResponse<JobPostingCompactDto>> getAllJobPostings(Pageable pageable) {
+    public ResponseEntity<PagedResponse<JobPostingCompactDto>> getAllJobPostings(
+            @SortDefault(
+                    sort = {"createdAt", "id"},
+                    direction = Sort.Direction.DESC
+            )
+            Pageable pageable
+    ) {
         Page<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostings(pageable);
 
         return ResponseEntity.ok(PagedResponse.from(jobPostings));
@@ -61,6 +69,10 @@ public class JobPostingController {
     @GetMapping("/api/companies/{companyId}/job-postings")
     public ResponseEntity<PagedResponse<JobPostingCompactDto>> getAllJobPostingsByCompany(
             @PathVariable UUID companyId,
+            @SortDefault(
+                    sort = {"createdAt", "id"},
+                    direction = Sort.Direction.DESC
+            )
             Pageable pageable
     ) {
         Page<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostingsByCompanyId(companyId, pageable);

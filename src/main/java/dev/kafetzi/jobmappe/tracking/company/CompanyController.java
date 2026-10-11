@@ -8,6 +8,8 @@ import dev.kafetzi.jobmappe.tracking.company.dto.CompanyRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,7 +26,13 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @GetMapping
-    public ResponseEntity<PagedResponse<CompanyCompactDto>> getCompanies(Pageable pageable) {
+    public ResponseEntity<PagedResponse<CompanyCompactDto>> getCompanies(
+            @SortDefault(
+                    sort = {"name", "id"},
+                    direction = Sort.Direction.ASC
+            )
+            Pageable pageable
+    ) {
         Page<CompanyCompactDto> companies = companyService.getCompanies(pageable);
 
         return ResponseEntity.ok(PagedResponse.from(companies));

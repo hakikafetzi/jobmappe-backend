@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,7 +25,13 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @GetMapping("/api/applications")
-    public ResponseEntity<PagedResponse<ApplicationCompactDto>> getAllApplications(Pageable pageable) {
+    public ResponseEntity<PagedResponse<ApplicationCompactDto>> getAllApplications(
+            @SortDefault(
+                    sort = {"createdAt", "id"},
+                    direction = Sort.Direction.DESC
+            )
+            Pageable pageable
+    ) {
         Page<ApplicationCompactDto> applications = applicationService.getAllApplications(pageable);
 
         return ResponseEntity.ok(PagedResponse.from(applications));

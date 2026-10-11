@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.application;
 
+import dev.kafetzi.jobmappe.common.pagination.PagedResponse;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationDetailDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationPatchDto;
@@ -22,10 +23,10 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @GetMapping("/api/applications")
-    public ResponseEntity<Page<ApplicationCompactDto>> getAllApplications(Pageable pageable) {
+    public ResponseEntity<PagedResponse<ApplicationCompactDto>> getAllApplications(Pageable pageable) {
         Page<ApplicationCompactDto> applications = applicationService.getAllApplications(pageable);
 
-        return ResponseEntity.ok(applications);
+        return ResponseEntity.ok(PagedResponse.from(applications));
     }
 
     @GetMapping("/api/applications/{id}")

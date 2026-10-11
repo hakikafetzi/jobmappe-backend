@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.jobposting;
 
+import dev.kafetzi.jobmappe.common.pagination.PagedResponse;
 import dev.kafetzi.jobmappe.tracking.jobposting.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,10 @@ public class JobPostingController {
     private final JobPostingService jobPostingService;
 
     @GetMapping("/api/job-postings")
-    public ResponseEntity<Page<JobPostingCompactDto>> getAllJobPostings(Pageable pageable) {
+    public ResponseEntity<PagedResponse<JobPostingCompactDto>> getAllJobPostings(Pageable pageable) {
         Page<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostings(pageable);
 
-        return ResponseEntity.ok(jobPostings);
+        return ResponseEntity.ok(PagedResponse.from(jobPostings));
     }
 
     @GetMapping("/api/job-postings/{id}")
@@ -58,13 +59,13 @@ public class JobPostingController {
     }
 
     @GetMapping("/api/companies/{companyId}/job-postings")
-    public ResponseEntity<Page<JobPostingCompactDto>> getAllJobPostingsByCompany(
+    public ResponseEntity<PagedResponse<JobPostingCompactDto>> getAllJobPostingsByCompany(
             @PathVariable UUID companyId,
             Pageable pageable
     ) {
         Page<JobPostingCompactDto> jobPostings = jobPostingService.getAllJobPostingsByCompanyId(companyId, pageable);
 
-        return ResponseEntity.ok(jobPostings);
+        return ResponseEntity.ok(PagedResponse.from(jobPostings));
     }
 
     @PatchMapping("/api/job-postings/{id}/archive")

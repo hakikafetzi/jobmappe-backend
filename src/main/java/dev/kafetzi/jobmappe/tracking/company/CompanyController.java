@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.company;
 
+import dev.kafetzi.jobmappe.common.pagination.PagedResponse;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyCompactDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyDetailDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyResponseDto;
@@ -23,10 +24,10 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @GetMapping
-    public ResponseEntity<Page<CompanyCompactDto>> getCompanies(Pageable pageable) {
+    public ResponseEntity<PagedResponse<CompanyCompactDto>> getCompanies(Pageable pageable) {
         Page<CompanyCompactDto> companies = companyService.getCompanies(pageable);
 
-        return ResponseEntity.ok(companies);
+        return ResponseEntity.ok(PagedResponse.from(companies));
     }
 
     @GetMapping("/{id}")

@@ -7,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -87,6 +89,19 @@ public class GlobalExceptionHandler {
 
         problemDetail.setTitle("Invalid sort property");
         problemDetail.setDetail(exception.getMessage());
+
+        return problemDetail;
+    }
+
+    @ExceptionHandler({
+            NoHandlerFoundException.class,
+            NoResourceFoundException.class
+    })
+    public ProblemDetail handleEndpointNotFoundException(Exception exception) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+
+        problemDetail.setTitle("Endpoint not found");
+        problemDetail.setDetail("The requested endpoint does not exist.");
 
         return problemDetail;
     }

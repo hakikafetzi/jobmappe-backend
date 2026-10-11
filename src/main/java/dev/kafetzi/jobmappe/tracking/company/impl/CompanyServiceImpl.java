@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,9 +36,9 @@ public class CompanyServiceImpl implements CompanyService {
     public Page<CompanyCompactDto> getCompanies(Pageable pageable) {
         Page<Company> companies = companyRepository.findAll(pageable);
 
-        Collection<UUID> companyIds = companies.getContent().stream()
+        List<UUID> companyIds = companies.getContent().stream()
                 .map(Company::getId)
-                .collect(Collectors.toSet());
+                .toList();
 
         Map<UUID, Long> jobCountsByCompanyId;
 

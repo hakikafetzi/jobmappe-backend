@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.jobposting.impl;
 
+import dev.kafetzi.jobmappe.common.pagination.PageableUtils;
 import dev.kafetzi.jobmappe.exception.ConflictException;
 import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingMapper;
@@ -31,7 +32,7 @@ public class JobPostingServiceImpl implements JobPostingService {
 
     @Override
     public Page<JobPostingCompactDto> getAllJobPostings(Pageable pageable) {
-        Page<JobPosting> jobPostings = jobPostingRepository.findAllWithCompany(pageable);
+        Page<JobPosting> jobPostings = jobPostingRepository.findAllWithCompany(PageableUtils.withStableSort(pageable));
 
         return mapToCompactDtoPage(jobPostings);
     }
@@ -88,7 +89,9 @@ public class JobPostingServiceImpl implements JobPostingService {
             );
         }
 
-        Page<JobPosting> jobPostings = jobPostingRepository.findAllByCompanyId(companyId, pageable);
+        Page<JobPosting> jobPostings = jobPostingRepository.findAllByCompanyId(
+                companyId, PageableUtils.withStableSort(pageable)
+        );
 
         return mapToCompactDtoPage(jobPostings);
     }

@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.company.impl;
 
+import dev.kafetzi.jobmappe.common.pagination.PageableUtils;
 import dev.kafetzi.jobmappe.exception.ConflictException;
 import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.company.CompanyMapper;
@@ -34,7 +35,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Page<CompanyCompactDto> getCompanies(Pageable pageable) {
-        Page<Company> companies = companyRepository.findAll(pageable);
+        Page<Company> companies = companyRepository.findAll(PageableUtils.withStableSort(pageable));
 
         List<UUID> companyIds = companies.getContent().stream()
                 .map(Company::getId)

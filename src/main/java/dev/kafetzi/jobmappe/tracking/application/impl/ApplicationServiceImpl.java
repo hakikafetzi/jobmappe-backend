@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.application.impl;
 
+import dev.kafetzi.jobmappe.common.pagination.PageableUtils;
 import dev.kafetzi.jobmappe.exception.ConflictException;
 import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationMapper;
@@ -30,7 +31,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Page<ApplicationCompactDto> getAllApplications(Pageable pageable) {
-        return applicationRepository.findAllWithJobPostingAndCompany(pageable)
+        return applicationRepository.findAllWithJobPostingAndCompany(PageableUtils.withStableSort(pageable))
                 .map(application -> {
                     Integer daysSinceApplication = null;
 

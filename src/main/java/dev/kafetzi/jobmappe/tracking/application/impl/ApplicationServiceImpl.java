@@ -3,14 +3,11 @@ package dev.kafetzi.jobmappe.tracking.application.impl;
 import dev.kafetzi.jobmappe.common.pagination.PageableUtils;
 import dev.kafetzi.jobmappe.exception.ConflictException;
 import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
-import dev.kafetzi.jobmappe.tracking.application.ApplicationMapper;
-import dev.kafetzi.jobmappe.tracking.application.Application;
+import dev.kafetzi.jobmappe.tracking.application.*;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationDetailDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationPatchDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationResponseDto;
-import dev.kafetzi.jobmappe.tracking.application.ApplicationRepository;
-import dev.kafetzi.jobmappe.tracking.application.ApplicationService;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPosting;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
 import org.springframework.data.domain.Page;
@@ -30,8 +27,22 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationMapper applicationMapper;
 
     @Override
-    public Page<ApplicationCompactDto> getAllApplications(Pageable pageable) {
-        return applicationRepository.findAllWithJobPostingAndCompany(PageableUtils.withStableSort(pageable))
+    public Page<ApplicationCompactDto> getAllApplications(ApplicationStatus status, ApplicationPriority priority, Pageable pageable) {
+        Pageable stablePageable = PageableUtils.withStableSort(pageable);
+
+        Page<Application> page;
+
+        if (status != null && priority != null) {
+            page = applicationRepository.findAllByStatusAndPriority(status, priority, stablePageable);
+        } else if (status != null) {
+            page = applicationRepository.findAllByStatus(status, stablePageable);
+        } else if (priority != null) {
+            page = applicationRepository.findAllByPriority(priority, stablePageable);
+        } else {
+            page = applicationRepository.findAllWithJobPostingAndCompany(stablePageable);
+        }
+
+        return page
                 .map(application -> {
                     Integer daysSinceApplication = null;
 

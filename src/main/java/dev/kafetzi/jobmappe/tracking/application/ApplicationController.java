@@ -26,13 +26,17 @@ public class ApplicationController {
 
     @GetMapping("/api/applications")
     public ResponseEntity<PagedResponse<ApplicationCompactDto>> getAllApplications(
+            @RequestParam(name = "status", required = false)
+            ApplicationStatus status,
+            @RequestParam(name = "priority", required = false)
+            ApplicationPriority priority,
             @SortDefault(
                     sort = {"createdAt", "id"},
                     direction = Sort.Direction.DESC
             )
             Pageable pageable
     ) {
-        Page<ApplicationCompactDto> applications = applicationService.getAllApplications(pageable);
+        Page<ApplicationCompactDto> applications = applicationService.getAllApplications(status, priority, pageable);
 
         return ResponseEntity.ok(PagedResponse.from(applications));
     }

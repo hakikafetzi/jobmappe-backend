@@ -2,6 +2,7 @@ package dev.kafetzi.jobmappe.tracking.application;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +32,14 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
 
     @Query("SELECT a.id FROM Application a WHERE a.jobPosting.id = :jobPostingId")
     Optional<UUID> findApplicationIdByJobPostingId(@Param("jobPostingId") UUID jobPostingId);
+
+
+    @EntityGraph(attributePaths = {"jobPosting", "jobPosting.company"})
+    Page<Application> findAllByStatus(ApplicationStatus status, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"jobPosting", "jobPosting.company"})
+    Page<Application> findAllByPriority(ApplicationPriority priority, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"jobPosting", "jobPosting.company"})
+    Page<Application> findAllByStatusAndPriority(ApplicationStatus status, ApplicationPriority priority, Pageable pageable);
 }

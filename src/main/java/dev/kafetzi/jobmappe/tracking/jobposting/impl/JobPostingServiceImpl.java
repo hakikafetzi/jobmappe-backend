@@ -2,6 +2,7 @@ package dev.kafetzi.jobmappe.tracking.jobposting.impl;
 
 import dev.kafetzi.jobmappe.common.pagination.PageableUtils;
 import dev.kafetzi.jobmappe.exception.ConflictException;
+import dev.kafetzi.jobmappe.exception.InvalidRequestException;
 import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.jobposting.*;
 import dev.kafetzi.jobmappe.tracking.company.Company;
@@ -28,11 +29,16 @@ public class JobPostingServiceImpl implements JobPostingService {
     private final JobPostingMapper jobPostingMapper;
 
     @Override
-    public Page<JobPostingCompactDto> getAllJobPostings(JobPostingFilter filter, Pageable pageable) {
+    public Page<JobPostingCompactDto> getAllJobPostings(String q, JobPostingFilter filter, Pageable pageable) {
         Pageable stablePageable = PageableUtils.withStableSort(pageable, JobPosting.class);
+        String normalizedQuery = q.strip();
+
+        if (!normalizedQuery.isEmpty() && filter != JobPostingFilter.ALL) {
+            throw new InvalidRequestException("Search is only supported with filter ALL.");
+        }
 
         Page<JobPosting> jobPostings = switch (filter) {
-            case ALL -> jobPostingRepository.findAllWithCompany(stablePageable);
+            case ALL -> jobPostingRepository.findAllWithCompany(normalizedQuery, stablePageable);
             case INACTIVE -> jobPostingRepository.findAllByStatus(JobPostingStatus.INACTIVE, stablePageable);
             case ARCHIVED -> jobPostingRepository.findAllByArchivedAtIsNotNull(stablePageable);
             case OPEN -> jobPostingRepository.findAllWithoutApplications(JobPostingStatus.ACTIVE, stablePageable);

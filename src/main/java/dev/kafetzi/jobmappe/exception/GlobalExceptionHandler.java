@@ -93,6 +93,16 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(InvalidRequestException.class)
+    public ProblemDetail handleInvalidRequestException(InvalidRequestException exception) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+
+        problemDetail.setTitle("Invalid request combination");
+        problemDetail.setDetail(exception.getMessage());
+
+        return problemDetail;
+    }
+
     @ExceptionHandler({
             NoHandlerFoundException.class,
             NoResourceFoundException.class

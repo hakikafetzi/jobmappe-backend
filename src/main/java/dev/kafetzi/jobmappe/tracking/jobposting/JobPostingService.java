@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface JobPostingService {
-    Page<JobPostingCompactDto> getAllJobPostings(JobPostingFilter filter, Pageable pageable);
+    Page<JobPostingCompactDto> getAllJobPostings(String q, JobPostingFilter filter, Pageable pageable);
     JobPostingDetailDto getJobPosting(UUID postingId);
     JobPostingResponseDto createJobPosting(UUID companyId, JobPostingRequestDto jobPostingRequestDto);
     JobPostingResponseDto updateJobPosting(UUID id, JobPostingRequestDto jobPostingRequestDto);

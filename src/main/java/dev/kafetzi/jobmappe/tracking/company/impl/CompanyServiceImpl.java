@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
-
     private final CompanyRepository companyRepository;
     private final JobPostingRepository jobPostingRepository;
     private final CompanyMapper companyMapper;

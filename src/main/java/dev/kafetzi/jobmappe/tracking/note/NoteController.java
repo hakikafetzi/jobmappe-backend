@@ -16,7 +16,6 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class NoteController {
-
     private final NoteService noteService;
 
     @GetMapping("/api/applications/{applicationId}/notes")

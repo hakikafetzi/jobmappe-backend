@@ -22,10 +22,8 @@ public class JobPostingController {
 
     @GetMapping("/api/job-postings")
     public ResponseEntity<PagedResponse<JobPostingCompactDto>> getAllJobPostings(
-            @RequestParam(name = "q", defaultValue = "")
-            String q,
-            @RequestParam(name = "filter", defaultValue = "ALL")
-            JobPostingFilter filter,
+            @RequestParam(name = "q", defaultValue = "") String q,
+            @RequestParam(name = "filter", defaultValue = "ALL") JobPostingFilter filter,
             @SortDefault(
                     sort = {"createdAt", "id"},
                     direction = Sort.Direction.DESC

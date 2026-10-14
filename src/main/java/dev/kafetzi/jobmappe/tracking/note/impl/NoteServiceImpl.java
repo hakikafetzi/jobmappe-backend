@@ -22,7 +22,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService {
-
     private final NoteRepository noteRepository;
     private final NoteCategoryRepository noteCategoryRepository;
     private final ApplicationRepository applicationRepository;

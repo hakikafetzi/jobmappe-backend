@@ -21,7 +21,6 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 public class ApplicationController {
-
     private final ApplicationService applicationService;
 
     @GetMapping("/api/applications")

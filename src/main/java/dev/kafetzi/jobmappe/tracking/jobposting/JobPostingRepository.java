@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @Repository
 public interface JobPostingRepository extends JpaRepository<JobPosting, UUID> {
-
     @Query(
             value = """
                     SELECT j FROM JobPosting j
@@ -53,8 +52,8 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, UUID> {
     Page<JobPosting> findAllByCompanyId(@Param("companyId") UUID companyId, Pageable pageable);
 
     @Query("""
-            SELECT j.company.id AS companyId, COUNT(j) AS count FROM JobPosting j 
-            WHERE j.company.id IN :companyIds 
+            SELECT j.company.id AS companyId, COUNT(j) AS count FROM JobPosting j
+            WHERE j.company.id IN :companyIds
             GROUP BY j.company.id
             """)
     List<CountByCompanyProjection> countJobPostingsPerCompanyIds(@Param("companyIds") Collection<UUID> companyIds);
@@ -99,7 +98,7 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, UUID> {
                     )
                     """,
             countQuery = """
-                    SELECT COUNT(j) FROM JobPosting j 
+                    SELECT COUNT(j) FROM JobPosting j
                     WHERE EXISTS (
                             SELECT a.id FROM Application a WHERE a.jobPosting = j
                     )

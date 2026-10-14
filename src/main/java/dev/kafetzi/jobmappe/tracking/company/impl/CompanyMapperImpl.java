@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CompanyMapperImpl implements CompanyMapper {
-
     @Override
     public CompanyResponseDto toDto(Company company) {
         return new CompanyResponseDto(

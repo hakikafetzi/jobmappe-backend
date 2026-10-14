@@ -27,8 +27,7 @@ public class CompanyController {
 
     @GetMapping
     public ResponseEntity<PagedResponse<CompanyCompactDto>> getCompanies(
-            @RequestParam(name = "q", defaultValue = "")
-            String q,
+            @RequestParam(name = "q", defaultValue = "") String q,
             @SortDefault(
                     sort = {"name", "id"},
                     direction = Sort.Direction.ASC

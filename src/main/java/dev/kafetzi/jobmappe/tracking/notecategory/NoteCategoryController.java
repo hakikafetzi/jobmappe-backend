@@ -16,7 +16,6 @@ import java.util.UUID;
 @RequestMapping("/api/note-categories")
 @RequiredArgsConstructor
 public class NoteCategoryController {
-
     private final NoteCategoryService noteCategoryService;
 
     @GetMapping

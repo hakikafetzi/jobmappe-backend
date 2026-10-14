@@ -16,7 +16,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 public class Application {
-
     public Application(JobPosting jobPosting) {
         if (jobPosting == null) {
             throw new IllegalArgumentException("Job posting cannot be null.");

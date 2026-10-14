@@ -15,7 +15,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 public class NoteCategory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")

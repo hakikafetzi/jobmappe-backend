@@ -18,7 +18,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class NoteCategoryServiceImpl implements NoteCategoryService {
-
     private final NoteCategoryRepository noteCategoryRepository;
     private final NoteCategoryMapper noteCategoryMapper;
 

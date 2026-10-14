@@ -16,7 +16,6 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class JobPostingMapperImpl implements JobPostingMapper {
-
     private final CompanyMapper companyMapper;
 
     @Override

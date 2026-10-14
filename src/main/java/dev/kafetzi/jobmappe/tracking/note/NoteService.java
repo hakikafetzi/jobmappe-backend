@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface NoteService {
-
     List<NoteCompactDto> getAllNotes(UUID applicationId);
     NoteDetailDto getNote(UUID id);
     NoteDetailDto createNote(UUID applicationId, NoteRequestDto noteRequestDto);

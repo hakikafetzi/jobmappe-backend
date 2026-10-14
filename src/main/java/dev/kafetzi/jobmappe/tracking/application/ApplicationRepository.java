@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, UUID> {
-
     @Query(
             value = """
                     SELECT a FROM Application a

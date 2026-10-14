@@ -22,7 +22,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
-
     private final ApplicationRepository applicationRepository;
     private final JobPostingRepository jobPostingRepository;
     private final ApplicationMapper applicationMapper;

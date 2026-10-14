@@ -34,8 +34,10 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyMapper companyMapper;
 
     @Override
-    public Page<CompanyCompactDto> getCompanies(Pageable pageable) {
-        Page<Company> companies = companyRepository.findAll(PageableUtils.withStableSort(pageable, Company.class));
+    public Page<CompanyCompactDto> getCompanies(String q, Pageable pageable) {
+        String normalizedQuery = q.strip();
+        Pageable stablePageable = PageableUtils.withStableSort(pageable, Company.class);
+        Page<Company> companies = companyRepository.findByNameContainingIgnoreCase(normalizedQuery, stablePageable);
 
         List<UUID> companyIds = companies.getContent().stream()
                 .map(Company::getId)

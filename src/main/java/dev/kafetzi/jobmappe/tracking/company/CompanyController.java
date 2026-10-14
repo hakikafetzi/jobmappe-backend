@@ -27,13 +27,15 @@ public class CompanyController {
 
     @GetMapping
     public ResponseEntity<PagedResponse<CompanyCompactDto>> getCompanies(
+            @RequestParam(name = "q", defaultValue = "")
+            String q,
             @SortDefault(
                     sort = {"name", "id"},
                     direction = Sort.Direction.ASC
             )
             Pageable pageable
     ) {
-        Page<CompanyCompactDto> companies = companyService.getCompanies(pageable);
+        Page<CompanyCompactDto> companies = companyService.getCompanies(q, pageable);
 
         return ResponseEntity.ok(PagedResponse.from(companies));
     }

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface CompanyService {
-    Page<CompanyCompactDto> getCompanies(Pageable pageable);
+    Page<CompanyCompactDto> getCompanies(String q, Pageable pageable);
     CompanyDetailDto getCompany(UUID id);
     CompanyResponseDto createCompany(CompanyRequestDto requestDto);
     CompanyResponseDto updateCompany(UUID id, CompanyRequestDto requestDto);

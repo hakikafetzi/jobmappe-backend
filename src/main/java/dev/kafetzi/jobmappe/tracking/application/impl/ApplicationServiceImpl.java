@@ -2,6 +2,7 @@ package dev.kafetzi.jobmappe.tracking.application.impl;
 
 import dev.kafetzi.jobmappe.common.pagination.PageableUtils;
 import dev.kafetzi.jobmappe.exception.ConflictException;
+import dev.kafetzi.jobmappe.exception.InvalidRequestException;
 import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.application.*;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationCompactDto;
@@ -27,10 +28,16 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationMapper applicationMapper;
 
     @Override
-    public Page<ApplicationCompactDto> getAllApplications(ApplicationStatus status, ApplicationPriority priority, Pageable pageable) {
+    public Page<ApplicationCompactDto> getAllApplications(
+            String q, ApplicationStatus status, ApplicationPriority priority, Pageable pageable
+    ) {
         Pageable stablePageable = PageableUtils.withStableSort(pageable, Application.class);
-
+        String normalizedQuery = q.strip();
         Page<Application> page;
+
+        if (!normalizedQuery.isEmpty() && (status != null || priority != null)) {
+            throw new InvalidRequestException("Search is only supported with no Filter.");
+        }
 
         if (status != null && priority != null) {
             page = applicationRepository.findAllByStatusAndPriority(status, priority, stablePageable);
@@ -39,7 +46,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         } else if (priority != null) {
             page = applicationRepository.findAllByPriority(priority, stablePageable);
         } else {
-            page = applicationRepository.findAllWithJobPostingAndCompany(stablePageable);
+            page = applicationRepository.findAllWithJobPostingAndCompany(normalizedQuery, stablePageable);
         }
 
         return page

@@ -10,7 +10,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.UUID;
 
 public interface ApplicationService {
-    Page<ApplicationCompactDto> getAllApplications(ApplicationStatus status, ApplicationPriority priority, Pageable pageable);
+    Page<ApplicationCompactDto> getAllApplications(
+            String q, ApplicationStatus status, ApplicationPriority priority, Pageable pageable
+    );
     ApplicationResponseDto startApplication(UUID jobPostingId);
     ApplicationDetailDto getApplication(UUID id);
     ApplicationResponseDto updateApplication(UUID id, ApplicationPatchDto applicationPatchDto);

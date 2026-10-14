@@ -17,22 +17,40 @@ import java.util.UUID;
 public interface ApplicationRepository extends JpaRepository<Application, UUID> {
 
     @Query(
-            value = "SELECT a FROM Application a JOIN FETCH a.jobPosting jp JOIN FETCH jp.company c",
-            countQuery = "SELECT COUNT(a) FROM Application a"
+            value = """
+                    SELECT a FROM Application a
+                    WHERE LOWER(a.jobPosting.title) LIKE LOWER(CONCAT('%', :q, '%'))
+                    OR LOWER(a.jobPosting.company.name) LIKE LOWER(CONCAT('%', :q, '%'))
+                    """,
+            countQuery = """
+                    SELECT COUNT(a) FROM Application a
+                    WHERE LOWER(a.jobPosting.title) LIKE LOWER(CONCAT('%', :q, '%'))
+                    OR LOWER(a.jobPosting.company.name) LIKE LOWER(CONCAT('%', :q, '%'))
+                    """
     )
-    Page<Application> findAllWithJobPostingAndCompany(Pageable pageable);
+    @EntityGraph(attributePaths = {"jobPosting", "jobPosting.company"})
+    Page<Application> findAllWithJobPostingAndCompany(@Param("q") String q, Pageable pageable);
 
-    @Query("SELECT a FROM Application a JOIN FETCH a.jobPosting jp JOIN FETCH jp.company c WHERE a.id = :id")
+    @Query("""
+            SELECT a FROM Application a
+            WHERE a.id = :id
+            """)
+    @EntityGraph(attributePaths = {"jobPosting", "jobPosting.company"})
     Optional<Application> findByIdWithJobPostingAndCompany(@Param("id") UUID id);
 
     boolean existsApplicationByJobPostingId(UUID jobPostingId);
 
-    @Query("SELECT a.jobPosting.id FROM Application a WHERE a.jobPosting.id IN :jobPostingIds")
+    @Query("""
+            SELECT a.jobPosting.id FROM Application a
+            WHERE a.jobPosting.id IN :jobPostingIds
+            """)
     List<UUID> findAllAppliedJobPostingIds(@Param("jobPostingIds") Collection<UUID> jobPostingIds);
 
-    @Query("SELECT a.id FROM Application a WHERE a.jobPosting.id = :jobPostingId")
+    @Query("""
+            SELECT a.id FROM Application a
+            WHERE a.jobPosting.id = :jobPostingId
+            """)
     Optional<UUID> findApplicationIdByJobPostingId(@Param("jobPostingId") UUID jobPostingId);
-
 
     @EntityGraph(attributePaths = {"jobPosting", "jobPosting.company"})
     Page<Application> findAllByStatus(ApplicationStatus status, Pageable pageable);
@@ -41,5 +59,7 @@ public interface ApplicationRepository extends JpaRepository<Application, UUID> 
     Page<Application> findAllByPriority(ApplicationPriority priority, Pageable pageable);
 
     @EntityGraph(attributePaths = {"jobPosting", "jobPosting.company"})
-    Page<Application> findAllByStatusAndPriority(ApplicationStatus status, ApplicationPriority priority, Pageable pageable);
+    Page<Application> findAllByStatusAndPriority(
+            ApplicationStatus status, ApplicationPriority priority, Pageable pageable
+    );
 }

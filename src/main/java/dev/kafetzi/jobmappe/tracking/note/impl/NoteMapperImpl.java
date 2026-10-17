@@ -1,6 +1,5 @@
 package dev.kafetzi.jobmappe.tracking.note.impl;
 
-import dev.kafetzi.jobmappe.tracking.application.Application;
 import dev.kafetzi.jobmappe.tracking.note.NoteMapper;
 import dev.kafetzi.jobmappe.tracking.note.Note;
 import dev.kafetzi.jobmappe.tracking.note.dto.NoteCompactDto;
@@ -16,7 +15,11 @@ public class NoteMapperImpl implements NoteMapper {
                 note.getId(),
                 note.getNoteCategory() != null ? note.getNoteCategory().getName() : null,
                 note.getTitle(),
-                note.getCreatedAt()
+                note.getCreatedAt(),
+                note.getUpdatedAt(),
+                note.getApplication() != null ? note.getApplication().getId() : null,
+                note.getApplication() != null ? note.getApplication().getJobPosting().getTitle() : null,
+                note.getApplication() != null ? note.getApplication().getJobPosting().getCompany().getName() : null
         );
     }
 
@@ -28,13 +31,16 @@ public class NoteMapperImpl implements NoteMapper {
                 note.getTitle(),
                 note.getContent(),
                 note.getCreatedAt(),
-                note.getUpdatedAt()
+                note.getUpdatedAt(),
+                note.getApplication() != null ? note.getApplication().getId() : null,
+                note.getApplication() != null ? note.getApplication().getJobPosting().getTitle() : null,
+                note.getApplication() != null ? note.getApplication().getJobPosting().getCompany().getName() : null
         );
     }
 
     @Override
-    public Note toEntity(NoteRequestDto noteRequestDto, Application application) {
-        Note note = new Note(application);
+    public Note toEntity(NoteRequestDto noteRequestDto) {
+        Note note = new Note();
         note.setTitle(noteRequestDto.title());
         note.setContent(noteRequestDto.content());
 

@@ -9,6 +9,9 @@ public record NoteDetailDto(
         String title,
         String content,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        UUID applicationId,
+        String jobTitle,
+        String companyName
 ) {
 }

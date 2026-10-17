@@ -1,5 +1,7 @@
 package dev.kafetzi.jobmappe.tracking.note.impl;
 
+import dev.kafetzi.jobmappe.common.pagination.PageableUtils;
+import dev.kafetzi.jobmappe.exception.InvalidRequestException;
 import dev.kafetzi.jobmappe.exception.ResourceNotFoundException;
 import dev.kafetzi.jobmappe.tracking.note.NoteMapper;
 import dev.kafetzi.jobmappe.tracking.application.Application;
@@ -12,11 +14,12 @@ import dev.kafetzi.jobmappe.tracking.application.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategoryRepository;
 import dev.kafetzi.jobmappe.tracking.note.NoteRepository;
 import dev.kafetzi.jobmappe.tracking.note.NoteService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,22 +31,33 @@ public class NoteServiceImpl implements NoteService {
     private final NoteMapper noteMapper;
 
     @Override
-    public List<NoteCompactDto> getAllNotes(UUID applicationId) {
-        if (!applicationRepository.existsById(applicationId)) {
-            throw new ResourceNotFoundException(
-                    "Application with id " + applicationId + " was not found."
-            );
+    public Page<NoteCompactDto> getAllNotes(String q, UUID noteCategoryId, UUID applicationId, Pageable pageable) {
+        Pageable stablePageable = PageableUtils.withStableSort(pageable, Note.class);
+        String normalizedQuery = q.strip();
+        Page<Note> page;
+
+        if (!normalizedQuery.isEmpty() && (noteCategoryId != null || applicationId != null)) {
+            throw new InvalidRequestException("Search is only supported with no filter.");
         }
 
-        return noteRepository.findAllByApplicationIdWithNoteCategory(applicationId)
-                .stream()
-                .map(noteMapper::toNoteCompactDto)
-                .toList();
+        if (noteCategoryId != null && applicationId != null) {
+            throw new InvalidRequestException("Only one filter is allowed.");
+        }
+
+        if (noteCategoryId != null) {
+            page = noteRepository.findAllByNoteCategoryId(noteCategoryId, stablePageable);
+        } else if (applicationId != null) {
+            page = noteRepository.findAllByApplicationId(applicationId, stablePageable);
+        } else {
+            page = noteRepository.findAllWithDetails(normalizedQuery, stablePageable);
+        }
+
+        return page.map(noteMapper::toNoteCompactDto);
     }
 
     @Override
     public NoteDetailDto getNote(UUID id) {
-        Note note = noteRepository.findByIdWithNoteCategory(id)
+        Note note = noteRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Note with id " + id + " was not found."
                         )
@@ -54,14 +68,17 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     @Transactional
-    public NoteDetailDto createNote(UUID applicationId, NoteRequestDto noteRequestDto) {
-        Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                                "Application with id " + applicationId + " was not found."
-                        )
-                );
+    public NoteDetailDto createNote(NoteRequestDto noteRequestDto) {
+        Note note = noteMapper.toEntity(noteRequestDto);
 
-        Note note = noteMapper.toEntity(noteRequestDto, application);
+        if (noteRequestDto.applicationId() != null) {
+            Application application = applicationRepository.findByIdWithJobPostingAndCompany(noteRequestDto.applicationId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                                    "Application with id " + noteRequestDto.applicationId() + " was not found."
+                            )
+                    );
+            note.setApplication(application);
+        }
 
         if (noteRequestDto.noteCategoryId() != null) {
             NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())
@@ -80,11 +97,22 @@ public class NoteServiceImpl implements NoteService {
     @Override
     @Transactional
     public NoteDetailDto updateNote(UUID id, NoteRequestDto noteRequestDto) {
-        Note note = noteRepository.findByIdWithNoteCategory(id)
+        Note note = noteRepository.findByIdWithDetails(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Note with id " + id + " was not found."
                         )
                 );
+
+        if (noteRequestDto.applicationId() != null) {
+            Application application = applicationRepository.findByIdWithJobPostingAndCompany(noteRequestDto.applicationId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                                    "Application with id " + noteRequestDto.applicationId() + " was not found."
+                            )
+                    );
+            note.setApplication(application);
+        } else {
+            note.setApplication(null);
+        }
 
         if (noteRequestDto.noteCategoryId() != null) {
             NoteCategory noteCategory = noteCategoryRepository.findById(noteRequestDto.noteCategoryId())

@@ -49,10 +49,13 @@ CREATE TABLE applications (
 
 CREATE TABLE notes (
                                    id               UUID PRIMARY KEY,
-                                   application_id   UUID         NOT NULL REFERENCES applications (id) ON DELETE CASCADE,
+                                   application_id   UUID         REFERENCES applications (id) ON DELETE SET NULL,
                                    note_category_id UUID         REFERENCES note_categories (id) ON DELETE SET NULL,
                                    title            VARCHAR(255) NOT NULL,
                                    content          TEXT,
                                    created_at       TIMESTAMP    NOT NULL,
                                    updated_at       TIMESTAMP
 );
+
+CREATE INDEX ix_notes_application_id ON notes (application_id);
+CREATE INDEX ix_notes_note_category_id ON notes (note_category_id);

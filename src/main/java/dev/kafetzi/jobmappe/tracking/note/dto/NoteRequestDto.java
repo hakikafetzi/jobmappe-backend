@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import java.util.UUID;
 
 public record NoteRequestDto(
+        UUID applicationId,
+
         UUID noteCategoryId,
 
         @NotBlank(message = "The title must not be blank")

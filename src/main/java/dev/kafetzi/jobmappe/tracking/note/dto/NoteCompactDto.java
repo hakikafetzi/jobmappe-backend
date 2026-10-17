@@ -7,6 +7,10 @@ public record NoteCompactDto(
         UUID id,
         String noteCategory,
         String title,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        UUID applicationId,
+        String jobTitle,
+        String companyName
 ) {
 }

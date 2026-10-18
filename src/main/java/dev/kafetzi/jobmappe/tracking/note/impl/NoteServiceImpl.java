@@ -41,10 +41,9 @@ public class NoteServiceImpl implements NoteService {
         }
 
         if (noteCategoryId != null && applicationId != null) {
-            throw new InvalidRequestException("Only one filter is allowed.");
+            page = noteRepository.findAllByApplicationIdAndNoteCategoryId(applicationId, noteCategoryId, stablePageable);
         }
-
-        if (noteCategoryId != null) {
+        else if (noteCategoryId != null) {
             page = noteRepository.findAllByNoteCategoryId(noteCategoryId, stablePageable);
         } else if (applicationId != null) {
             page = noteRepository.findAllByApplicationId(applicationId, stablePageable);

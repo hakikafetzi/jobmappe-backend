@@ -49,6 +49,14 @@ public interface NoteRepository extends JpaRepository<Note, UUID> {
     })
     Page<Note> findAllByApplicationId(UUID applicationId, Pageable pageable);
 
+    @EntityGraph(attributePaths = {
+            "noteCategory",
+            "application",
+            "application.jobPosting",
+            "application.jobPosting.company"
+    })
+    Page<Note> findAllByApplicationIdAndNoteCategoryId(UUID applicationId, UUID noteCategoryId, Pageable pageable);
+
     @Query("""
             SELECT n FROM Note n
             WHERE n.id = :noteId

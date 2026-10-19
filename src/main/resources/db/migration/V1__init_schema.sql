@@ -42,7 +42,7 @@ CREATE TABLE applications (
                               status         VARCHAR(50)  NOT NULL,
                               priority       VARCHAR(50)  NOT NULL,
                               applied_at     DATE,
-                              applied_via    VARCHAR(255),
+                              applied_via    VARCHAR(50),
                               portal_url     VARCHAR(1000),
                               closed_at      DATE,
                               created_at     TIMESTAMP    NOT NULL,

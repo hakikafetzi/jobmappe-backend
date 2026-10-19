@@ -8,7 +8,7 @@ public record JobPostingCompactDto(
         String title,
         String companyName,
         String location,
-        Boolean hasApplication,
+        boolean hasApplication,
         LocalDateTime createdAt
 ) {
 }

@@ -12,6 +12,6 @@ public interface JobPostingMapper {
     JobPostingSummaryDto toSummaryDto(JobPosting jobPosting);
     JobPosting toEntity(JobPostingRequestDto jobPostingRequestDto, Company company);
     JobPostingDetailDto toDetailDto(JobPosting jobPosting, UUID applicationId);
-    JobPostingCompactDto toCompactDto(JobPosting jobPosting, Boolean hasApplication);
+    JobPostingCompactDto toCompactDto(JobPosting jobPosting, boolean hasApplication);
     void updateEntityFromDto(JobPostingRequestDto jobPostingRequestDto, JobPosting jobPosting);
 }

@@ -64,7 +64,7 @@ public class JobPostingMapperImpl implements JobPostingMapper {
     }
 
     @Override
-    public JobPostingCompactDto toCompactDto(JobPosting jobPosting, Boolean hasApplication) {
+    public JobPostingCompactDto toCompactDto(JobPosting jobPosting, boolean hasApplication) {
         return new JobPostingCompactDto(
                 jobPosting.getId(),
                 jobPosting.getTitle(),

@@ -17,7 +17,7 @@ public record ApplicationPatchDto(
         @Pattern(
                 regexp = "https?://\\S+",
                 flags = Pattern.Flag.CASE_INSENSITIVE,
-                message = "The url must start with http:// or https://"
+                message = "The portalUrl must start with http:// or https://"
         )
         @Size(max = 1000, message = "The portalUrl must not exceed 1000 characters")
         String portalUrl

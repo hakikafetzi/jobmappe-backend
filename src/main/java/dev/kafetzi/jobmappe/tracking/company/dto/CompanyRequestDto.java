@@ -13,7 +13,7 @@ public record CompanyRequestDto(
         @Pattern(
                 regexp = "https?://\\S+",
                 flags = Pattern.Flag.CASE_INSENSITIVE,
-                message = "The url must start with http:// or https://"
+                message = "The website must start with http:// or https://"
         )
         @Size(max = 255, message = "The website must not exceed 255 characters")
         String website,

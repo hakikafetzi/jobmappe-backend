@@ -31,7 +31,23 @@
 	</developers>
 	<properties>
 		<java.version>21</java.version>
+		<!-- Overrides for security fixes; remove once Spring Boot manages these versions -->
+		<tomcat.version>11.0.26</tomcat.version>
+		<postgresql.version>42.7.14</postgresql.version>
+		<jackson-bom.version>3.1.7</jackson-bom.version>
+		<jackson-2-bom.version>2.21.7</jackson-2-bom.version>
+		<logback.version>1.6.5</logback.version>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<!-- Transitive via json-smart (test scope); override for security fixes -->
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm</artifactId>
+				<version>9.11.1</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -52,7 +68,7 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>3.0.3</version>
+			<version>3.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>

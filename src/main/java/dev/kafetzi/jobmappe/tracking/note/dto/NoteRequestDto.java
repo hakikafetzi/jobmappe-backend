@@ -10,7 +10,7 @@ public record NoteRequestDto(
 
         UUID noteCategoryId,
 
-        @NotBlank(message = "The title must not be blank")
+        @NotBlank(message = "The title is required")
         @Size(max = 255, message = "The title must not exceed 255 characters")
         String title,
 

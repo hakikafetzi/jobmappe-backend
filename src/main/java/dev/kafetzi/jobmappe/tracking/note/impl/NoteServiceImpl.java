@@ -51,7 +51,7 @@ public class NoteServiceImpl implements NoteService {
             page = noteRepository.findAllWithDetails(normalizedQuery, stablePageable);
         }
 
-        return page.map(noteMapper::toNoteCompactDto);
+        return page.map(noteMapper::toCompactDto);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class NoteServiceImpl implements NoteService {
                         )
                 );
 
-        return noteMapper.toNoteDetailDto(note);
+        return noteMapper.toDetailDto(note);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class NoteServiceImpl implements NoteService {
 
         Note savedNote = noteRepository.save(note);
 
-        return noteMapper.toNoteDetailDto(savedNote);
+        return noteMapper.toDetailDto(savedNote);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class NoteServiceImpl implements NoteService {
 
         noteMapper.updateEntityFromDto(noteRequestDto, note);
 
-        return noteMapper.toNoteDetailDto(note);
+        return noteMapper.toDetailDto(note);
     }
 
     @Override

@@ -4,15 +4,15 @@ import dev.kafetzi.jobmappe.tracking.company.CompanyMapper;
 import dev.kafetzi.jobmappe.tracking.company.Company;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyCompactDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyDetailDto;
-import dev.kafetzi.jobmappe.tracking.company.dto.CompanyResponseDto;
+import dev.kafetzi.jobmappe.tracking.company.dto.CompanySummaryDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyRequestDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CompanyMapperImpl implements CompanyMapper {
     @Override
-    public CompanyResponseDto toDto(Company company) {
-        return new CompanyResponseDto(
+    public CompanySummaryDto toSummaryDto(Company company) {
+        return new CompanySummaryDto(
                 company.getId(),
                 company.getName(),
                 company.getWebsite(),

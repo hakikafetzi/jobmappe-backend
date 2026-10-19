@@ -7,7 +7,7 @@ import dev.kafetzi.jobmappe.tracking.jobposting.JobPosting;
 import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingCompactDto;
 import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingDetailDto;
 import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingRequestDto;
-import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingResponseDto;
+import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingSummaryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +19,8 @@ public class JobPostingMapperImpl implements JobPostingMapper {
     private final CompanyMapper companyMapper;
 
     @Override
-    public JobPostingResponseDto toDto(JobPosting jobPosting) {
-        return new JobPostingResponseDto(
+    public JobPostingSummaryDto toSummaryDto(JobPosting jobPosting) {
+        return new JobPostingSummaryDto(
                 jobPosting.getId(),
                 jobPosting.getTitle(),
                 jobPosting.getDescription(),
@@ -50,7 +50,7 @@ public class JobPostingMapperImpl implements JobPostingMapper {
     public JobPostingDetailDto toDetailDto(JobPosting jobPosting, UUID applicationId) {
         return new JobPostingDetailDto(
                 jobPosting.getId(),
-                companyMapper.toDto(jobPosting.getCompany()),
+                companyMapper.toSummaryDto(jobPosting.getCompany()),
                 jobPosting.getTitle(),
                 jobPosting.getDescription(),
                 jobPosting.getLocation(),

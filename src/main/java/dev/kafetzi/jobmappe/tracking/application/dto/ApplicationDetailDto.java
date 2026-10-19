@@ -1,8 +1,8 @@
 package dev.kafetzi.jobmappe.tracking.application.dto;
 
 import dev.kafetzi.jobmappe.tracking.application.ApplicationChannel;
-import dev.kafetzi.jobmappe.tracking.company.dto.CompanyResponseDto;
-import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingResponseDto;
+import dev.kafetzi.jobmappe.tracking.company.dto.CompanySummaryDto;
+import dev.kafetzi.jobmappe.tracking.jobposting.dto.JobPostingSummaryDto;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationPriority;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationStatus;
 
@@ -12,8 +12,8 @@ import java.util.UUID;
 
 public record ApplicationDetailDto(
         UUID id,
-        JobPostingResponseDto jobPosting,
-        CompanyResponseDto company,
+        JobPostingSummaryDto jobPosting,
+        CompanySummaryDto company,
         ApplicationStatus status,
         ApplicationPriority priority,
         LocalDate appliedAt,

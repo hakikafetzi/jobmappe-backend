@@ -78,7 +78,7 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
             );
         }
 
-        noteCategoryMapper.updateEntity(noteCategory, noteCategoryRequestDto);
+        noteCategoryMapper.updateEntityFromDto(noteCategoryRequestDto, noteCategory);
         noteCategory.setName(normalizedCategoryName);
 
         return noteCategoryMapper.toDto(noteCategory);

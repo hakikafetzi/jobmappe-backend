@@ -6,7 +6,6 @@ import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingMapper;
 import dev.kafetzi.jobmappe.tracking.application.Application;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationDetailDto;
-import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -30,25 +29,11 @@ public class ApplicationMapperImpl implements ApplicationMapper {
     }
 
     @Override
-    public ApplicationResponseDto toResponseDto(Application application) {
-        return new ApplicationResponseDto(
-                application.getId(),
-                application.getStatus(),
-                application.getPriority(),
-                application.getAppliedAt(),
-                application.getAppliedVia(),
-                application.getPortalUrl(),
-                application.getClosedAt(),
-                application.getCreatedAt()
-        );
-    }
-
-    @Override
     public ApplicationDetailDto toDetailDto(Application application) {
         return new ApplicationDetailDto(
                 application.getId(),
-                jobPostingMapper.toDto(application.getJobPosting()),
-                companyMapper.toDto(application.getJobPosting().getCompany()),
+                jobPostingMapper.toSummaryDto(application.getJobPosting()),
+                companyMapper.toSummaryDto(application.getJobPosting().getCompany()),
                 application.getStatus(),
                 application.getPriority(),
                 application.getAppliedAt(),

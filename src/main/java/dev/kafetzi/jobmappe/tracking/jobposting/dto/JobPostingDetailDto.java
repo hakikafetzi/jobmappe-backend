@@ -1,6 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.jobposting.dto;
 
-import dev.kafetzi.jobmappe.tracking.company.dto.CompanyResponseDto;
+import dev.kafetzi.jobmappe.tracking.company.dto.CompanySummaryDto;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingStatus;
 
 import java.time.LocalDate;
@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public record JobPostingDetailDto(
         UUID id,
-        CompanyResponseDto company,
+        CompanySummaryDto company,
         String title,
         String description,
         String location,

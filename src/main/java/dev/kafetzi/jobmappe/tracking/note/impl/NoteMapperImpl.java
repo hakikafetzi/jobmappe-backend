@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class NoteMapperImpl implements NoteMapper {
     @Override
-    public NoteCompactDto toNoteCompactDto(Note note) {
+    public NoteCompactDto toCompactDto(Note note) {
         return new NoteCompactDto(
                 note.getId(),
                 note.getNoteCategory() != null ? note.getNoteCategory().getName() : null,
@@ -24,7 +24,7 @@ public class NoteMapperImpl implements NoteMapper {
     }
 
     @Override
-    public NoteDetailDto toNoteDetailDto(Note note) {
+    public NoteDetailDto toDetailDto(Note note) {
         return new NoteDetailDto(
                 note.getId(),
                 note.getNoteCategory() != null ? note.getNoteCategory().getName() : null,

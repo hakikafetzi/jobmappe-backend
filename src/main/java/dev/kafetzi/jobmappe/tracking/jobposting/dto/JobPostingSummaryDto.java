@@ -5,7 +5,7 @@ import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingStatus;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record JobPostingResponseDto(
+public record JobPostingSummaryDto(
         UUID id,
         String title,
         String description,

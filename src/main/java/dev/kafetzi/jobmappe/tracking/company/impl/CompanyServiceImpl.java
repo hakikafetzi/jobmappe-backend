@@ -8,7 +8,6 @@ import dev.kafetzi.jobmappe.tracking.company.Company;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyCompactDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyDetailDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyRequestDto;
-import dev.kafetzi.jobmappe.tracking.company.dto.CompanyResponseDto;
 import dev.kafetzi.jobmappe.tracking.company.CompanyRepository;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
 import dev.kafetzi.jobmappe.tracking.company.CompanyService;

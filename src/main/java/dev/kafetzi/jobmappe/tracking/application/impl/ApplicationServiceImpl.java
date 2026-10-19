@@ -47,19 +47,7 @@ public class ApplicationServiceImpl implements ApplicationService {
             page = applicationRepository.findAllWithJobPostingAndCompany(normalizedQuery, stablePageable);
         }
 
-        return page
-                .map(application -> {
-                    Integer daysSinceApplication = null;
-
-                    if (application.getAppliedAt() != null) {
-                        daysSinceApplication = (int) java.time.temporal.ChronoUnit.DAYS.between(
-                                application.getAppliedAt(),
-                                java.time.LocalDate.now()
-                        );
-                    }
-
-                    return applicationMapper.toCompactDto(application, daysSinceApplication);
-                });
+        return page.map(applicationMapper::toCompactDto);
     }
 
     @Override

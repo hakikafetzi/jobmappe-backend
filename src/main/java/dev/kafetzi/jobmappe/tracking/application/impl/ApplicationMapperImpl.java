@@ -9,6 +9,9 @@ import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationDetailDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 @Component
 @RequiredArgsConstructor
 public class ApplicationMapperImpl implements ApplicationMapper {
@@ -16,7 +19,7 @@ public class ApplicationMapperImpl implements ApplicationMapper {
     private final CompanyMapper companyMapper;
 
     @Override
-    public ApplicationCompactDto toCompactDto(Application application, Integer daysSinceApplication) {
+    public ApplicationCompactDto toCompactDto(Application application) {
         return new ApplicationCompactDto(
                 application.getId(),
                 application.getJobPosting().getTitle(),
@@ -24,7 +27,7 @@ public class ApplicationMapperImpl implements ApplicationMapper {
                 application.getStatus(),
                 application.getPriority(),
                 application.getAppliedAt(),
-                daysSinceApplication
+                daysSinceApplication(application.getAppliedAt())
         );
     }
 
@@ -42,5 +45,9 @@ public class ApplicationMapperImpl implements ApplicationMapper {
                 application.getClosedAt(),
                 application.getCreatedAt()
         );
+    }
+
+    private Integer daysSinceApplication(LocalDate applicationDate) {
+        return applicationDate == null ? null : (int) ChronoUnit.DAYS.between(applicationDate, LocalDate.now());
     }
 }

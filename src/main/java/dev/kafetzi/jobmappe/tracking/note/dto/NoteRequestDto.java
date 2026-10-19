@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.note.dto;
 
+import dev.kafetzi.jobmappe.common.text.TextUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -16,4 +17,7 @@ public record NoteRequestDto(
 
         String content
 ) {
+        public NoteRequestDto {
+                title = TextUtils.normalize(title);
+        }
 }

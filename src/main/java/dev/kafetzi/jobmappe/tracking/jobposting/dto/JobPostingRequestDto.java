@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.jobposting.dto;
 
+import dev.kafetzi.jobmappe.common.text.TextUtils;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingStatus;
 import jakarta.validation.constraints.*;
 
@@ -26,4 +27,9 @@ public record JobPostingRequestDto(
         @PastOrPresent(message = "The publishedAt date must not be in the future")
         LocalDate publishedAt
 ) {
+        public JobPostingRequestDto {
+                title = TextUtils.normalize(title);
+                location = TextUtils.normalize(location);
+                url = TextUtils.normalize(url);
+        }
 }

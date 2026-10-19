@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.notecategory.dto;
 
+import dev.kafetzi.jobmappe.common.text.TextUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -8,4 +9,7 @@ public record NoteCategoryRequestDto(
         @Size(max = 255, message = "The name must not exceed 255 characters")
         String name
 ) {
+        public NoteCategoryRequestDto {
+                name = TextUtils.normalize(name);
+        }
 }

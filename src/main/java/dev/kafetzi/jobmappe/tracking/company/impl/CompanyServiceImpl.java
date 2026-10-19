@@ -77,15 +77,13 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional
     public CompanyDetailDto createCompany(CompanyRequestDto requestDto) {
         Company company = companyMapper.toEntity(requestDto);
-        String normalizedCompanyName = company.getName().strip();
 
-        if(companyRepository.existsByNameIgnoreCase(normalizedCompanyName)) {
+        if(companyRepository.existsByNameIgnoreCase(company.getName())) {
             throw new ConflictException(
-                    "Company with name '" + normalizedCompanyName + "' already exists."
+                    "Company with name '" + company.getName() + "' already exists."
             );
         }
 
-        company.setName(normalizedCompanyName);
         Company newCompany = companyRepository.save(company);
 
         return companyMapper.toDetailDto(newCompany, 0);
@@ -100,17 +98,13 @@ public class CompanyServiceImpl implements CompanyService {
                         )
                 );
 
-        String normalizedRequestName = requestDto.name().strip();
-
-        if(companyRepository.existsByNameIgnoreCaseAndIdNot(normalizedRequestName, id)) {
+        if(companyRepository.existsByNameIgnoreCaseAndIdNot(requestDto.name(), id)) {
             throw new ConflictException(
-                    "Company with name '" + normalizedRequestName + "' already exists."
+                    "Company with name '" + requestDto.name() + "' already exists."
             );
         }
 
         companyMapper.updateEntityFromDto(requestDto, company);
-        company.setName(normalizedRequestName);
-
         long jobCount = jobPostingRepository.countJobPostingsByCompanyId(company.getId());
 
         return companyMapper.toDetailDto(company, jobCount);

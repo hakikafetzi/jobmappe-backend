@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.tracking.company.dto;
 
+import dev.kafetzi.jobmappe.common.text.TextUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -25,4 +26,11 @@ public record CompanyRequestDto(
         @Size(max = 255, message = "The city must not exceed 255 characters")
         String city
 ) {
+        public CompanyRequestDto {
+                name = TextUtils.normalize(name);
+                website = TextUtils.normalize(website);
+                street = TextUtils.normalize(street);
+                postalCode = TextUtils.normalize(postalCode);
+                city = TextUtils.normalize(city);
+        }
 }

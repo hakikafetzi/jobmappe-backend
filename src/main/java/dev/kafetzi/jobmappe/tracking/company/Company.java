@@ -12,35 +12,36 @@ import java.util.UUID;
 @Table(name = "companies")
 @NoArgsConstructor
 @Getter
-@Setter
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    @Setter(AccessLevel.NONE)
     private UUID id;
 
+    @Setter
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Setter
     @Column(name = "website")
     private String website;
 
+    @Setter
     @Column(name = "street")
     private String street;
 
+    @Setter
     @Column(name = "postal_code", length = 20)
     private String postalCode;
 
+    @Setter
     @Column(name = "city")
     private String city;
 
-    @Setter(AccessLevel.NONE)
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Setter(AccessLevel.NONE)
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;

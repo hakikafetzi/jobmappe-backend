@@ -3,7 +3,6 @@ package dev.kafetzi.jobmappe.tracking.note;
 import dev.kafetzi.jobmappe.tracking.application.Application;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategory;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,34 +16,34 @@ import java.util.UUID;
 @Table(name = "notes")
 @NoArgsConstructor
 @Getter
-@Setter
 public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Setter(AccessLevel.NONE)
     private UUID id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id")
     private Application application;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "note_category_id")
     private NoteCategory noteCategory;
 
+    @Setter
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Setter
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    @Setter(AccessLevel.NONE)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    @Setter(AccessLevel.NONE)
     private LocalDateTime updatedAt;
 }

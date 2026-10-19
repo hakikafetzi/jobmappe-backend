@@ -25,6 +25,8 @@ CREATE TABLE job_postings (
                               updated_at   TIMESTAMP
 );
 
+CREATE INDEX ix_job_postings_company_id ON job_postings (company_id);
+
 CREATE TABLE note_categories (
                                  id         UUID PRIMARY KEY,
                                  name       VARCHAR(255) NOT NULL,

@@ -14,7 +14,11 @@ public record ApplicationPatchDto(
 
         ApplicationChannel appliedVia,
 
-        @Pattern(regexp = ".*\\S.*", message = "The portalUrl must not be blank or contain only whitespace")
+        @Pattern(
+                regexp = "https?://\\S+",
+                flags = Pattern.Flag.CASE_INSENSITIVE,
+                message = "The url must start with http:// or https://"
+        )
         @Size(max = 1000, message = "The portalUrl must not exceed 1000 characters")
         String portalUrl
 ) {

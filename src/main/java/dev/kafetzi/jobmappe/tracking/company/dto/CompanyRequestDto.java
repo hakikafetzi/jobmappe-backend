@@ -10,7 +10,11 @@ public record CompanyRequestDto(
         @Size(max = 255, message = "The name must not exceed 255 characters")
         String name,
 
-        @Pattern(regexp = ".*\\S.*", message = "The website must not be blank or contain only whitespace")
+        @Pattern(
+                regexp = "https?://\\S+",
+                flags = Pattern.Flag.CASE_INSENSITIVE,
+                message = "The url must start with http:// or https://"
+        )
         @Size(max = 255, message = "The website must not exceed 255 characters")
         String website,
 

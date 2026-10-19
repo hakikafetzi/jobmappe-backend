@@ -19,6 +19,11 @@ public record JobPostingRequestDto(
 
         @NotBlank(message = "The url is required")
         @Size(max = 1000, message = "The url must not exceed 1000 characters")
+        @Pattern(
+                regexp = "https?://\\S+",
+                flags = Pattern.Flag.CASE_INSENSITIVE,
+                message = "The url must start with http:// or https://"
+        )
         String url,
 
         @NotNull(message = "The status is required")

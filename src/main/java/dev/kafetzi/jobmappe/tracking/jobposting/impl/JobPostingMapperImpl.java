@@ -56,7 +56,6 @@ public class JobPostingMapperImpl implements JobPostingMapper {
                 jobPosting.getLocation(),
                 jobPosting.getUrl(),
                 jobPosting.getStatus(),
-                applicationId != null,
                 applicationId,
                 jobPosting.getPublishedAt(),
                 jobPosting.getCreatedAt(),

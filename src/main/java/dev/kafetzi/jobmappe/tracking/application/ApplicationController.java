@@ -4,7 +4,6 @@ import dev.kafetzi.jobmappe.common.pagination.PagedResponse;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationDetailDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationPatchDto;
-import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,18 +46,18 @@ public class ApplicationController {
     }
 
     @PatchMapping("/api/applications/{id}")
-    public ResponseEntity<ApplicationResponseDto> updateApplication(
+    public ResponseEntity<ApplicationDetailDto> updateApplication(
             @PathVariable UUID id,
             @Valid @RequestBody ApplicationPatchDto applicationPatchDto
     ) {
-        ApplicationResponseDto application = applicationService.updateApplication(id, applicationPatchDto);
+        ApplicationDetailDto application = applicationService.updateApplication(id, applicationPatchDto);
 
         return ResponseEntity.ok(application);
     }
 
     @PostMapping("/api/job-postings/{jobPostingId}/applications")
-    public ResponseEntity<ApplicationResponseDto> startApplication(@PathVariable UUID jobPostingId) {
-        ApplicationResponseDto application = applicationService.startApplication(jobPostingId);
+    public ResponseEntity<ApplicationDetailDto> startApplication(@PathVariable UUID jobPostingId) {
+        ApplicationDetailDto application = applicationService.startApplication(jobPostingId);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()

@@ -7,6 +7,7 @@ import dev.kafetzi.jobmappe.tracking.application.ApplicationPriority;
 import dev.kafetzi.jobmappe.tracking.application.ApplicationStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record ApplicationDetailDto(
@@ -18,6 +19,7 @@ public record ApplicationDetailDto(
         LocalDate appliedAt,
         ApplicationChannel appliedVia,
         String portalUrl,
-        LocalDate closedAt
+        LocalDate closedAt,
+        LocalDateTime createdAt
 ) {
 }

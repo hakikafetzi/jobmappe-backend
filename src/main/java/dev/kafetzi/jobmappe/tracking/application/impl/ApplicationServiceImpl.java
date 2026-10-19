@@ -8,7 +8,6 @@ import dev.kafetzi.jobmappe.tracking.application.*;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationCompactDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationDetailDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationPatchDto;
-import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationResponseDto;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPosting;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
 import org.springframework.data.domain.Page;
@@ -65,14 +64,14 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     @Transactional
-    public ApplicationResponseDto startApplication(UUID jobPostingId) {
+    public ApplicationDetailDto startApplication(UUID jobPostingId) {
         if (applicationRepository.existsApplicationByJobPostingId(jobPostingId)) {
             throw new ConflictException(
                     "Application for job posting with id " + jobPostingId + " already exists."
             );
         }
 
-        JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
+        JobPosting jobPosting = jobPostingRepository.findByIdWithCompany(jobPostingId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 "Job posting with id " + jobPostingId + " was not found."
@@ -89,7 +88,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         Application savedApplication = applicationRepository.save(application);
 
-        return applicationMapper.toResponseDto(savedApplication);
+        return applicationMapper.toDetailDto(savedApplication);
     }
 
     @Override
@@ -105,8 +104,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     @Transactional
-    public ApplicationResponseDto updateApplication(UUID id, ApplicationPatchDto applicationPatchDto) {
-        Application application = applicationRepository.findById(id)
+    public ApplicationDetailDto updateApplication(UUID id, ApplicationPatchDto applicationPatchDto) {
+        Application application = applicationRepository.findByIdWithJobPostingAndCompany(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Application with id " + id + " was not found."
                         )
@@ -128,6 +127,6 @@ public class ApplicationServiceImpl implements ApplicationService {
             application.changeStatus(applicationPatchDto.status());
         }
 
-        return applicationMapper.toResponseDto(application);
+        return applicationMapper.toDetailDto(application);
     }
 }

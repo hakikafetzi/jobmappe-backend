@@ -54,7 +54,8 @@ public class ApplicationMapperImpl implements ApplicationMapper {
                 application.getAppliedAt(),
                 application.getAppliedVia(),
                 application.getPortalUrl(),
-                application.getClosedAt()
+                application.getClosedAt(),
+                application.getCreatedAt()
         );
     }
 }

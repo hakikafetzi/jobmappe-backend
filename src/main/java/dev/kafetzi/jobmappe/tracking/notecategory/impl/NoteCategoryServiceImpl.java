@@ -23,7 +23,7 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
 
     @Override
     public List<NoteCategoryDto> getAllNoteCategories() {
-        List<NoteCategory> noteCategories = noteCategoryRepository.findAll();
+        List<NoteCategory> noteCategories = noteCategoryRepository.findAllByOrderByNameAsc();
 
         return noteCategories
                 .stream()

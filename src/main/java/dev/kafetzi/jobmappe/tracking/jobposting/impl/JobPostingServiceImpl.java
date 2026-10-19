@@ -50,7 +50,7 @@ public class JobPostingServiceImpl implements JobPostingService {
 
     @Override
     @Transactional
-    public JobPostingResponseDto createJobPosting(UUID companyId, JobPostingRequestDto jobPostingRequestDto) {
+    public JobPostingDetailDto createJobPosting(UUID companyId, JobPostingRequestDto jobPostingRequestDto) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Company with id " + companyId + " was not found."
@@ -61,7 +61,7 @@ public class JobPostingServiceImpl implements JobPostingService {
 
         JobPosting jobPostingSaved = jobPostingRepository.save(jobPosting);
 
-        return jobPostingMapper.toDto(jobPostingSaved);
+        return jobPostingMapper.toDetailDto(jobPostingSaved, null);
     }
 
     @Override
@@ -71,17 +71,14 @@ public class JobPostingServiceImpl implements JobPostingService {
                         "Job posting with id " + postingId + " was not found."
                         )
                 );
-        UUID applicationId = applicationRepository.findApplicationIdByJobPostingId(postingId)
-                .orElse(null);
 
-
-        return jobPostingMapper.toDetailDto(jobPosting, applicationId);
+        return mapToDetailDto(jobPosting);
     }
 
     @Override
     @Transactional
-    public JobPostingResponseDto updateJobPosting(UUID id, JobPostingRequestDto jobPostingRequestDto) {
-        JobPosting jobPosting = jobPostingRepository.findById(id)
+    public JobPostingDetailDto updateJobPosting(UUID id, JobPostingRequestDto jobPostingRequestDto) {
+        JobPosting jobPosting = jobPostingRepository.findByIdWithCompany(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Job posting with id " + id + " was not found."
                         )
@@ -89,7 +86,7 @@ public class JobPostingServiceImpl implements JobPostingService {
 
         jobPostingMapper.updateEntityFromDto(jobPostingRequestDto, jobPosting);
 
-        return jobPostingMapper.toDto(jobPosting);
+        return mapToDetailDto(jobPosting);
     }
 
     @Override
@@ -109,8 +106,8 @@ public class JobPostingServiceImpl implements JobPostingService {
 
     @Transactional
     @Override
-    public JobPostingResponseDto setArchived(UUID id, JobPostingArchiveDto jobPostingArchiveDto) {
-        JobPosting jobPosting = jobPostingRepository.findById(id)
+    public JobPostingDetailDto setArchived(UUID id, JobPostingArchiveDto jobPostingArchiveDto) {
+        JobPosting jobPosting = jobPostingRepository.findByIdWithCompany(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Job posting with id " + id + " was not found."
                         )
@@ -128,7 +125,7 @@ public class JobPostingServiceImpl implements JobPostingService {
             jobPosting.restore();
         }
 
-        return jobPostingMapper.toDto(jobPosting);
+        return mapToDetailDto(jobPosting);
     }
 
     private Page<JobPostingCompactDto> mapToCompactDtoPage(Page<JobPosting> jobPostings) {
@@ -152,5 +149,12 @@ public class JobPostingServiceImpl implements JobPostingService {
                                 jobPostingAppliedIds.contains(jobPosting.getId())
                         )
                 );
+    }
+
+    private JobPostingDetailDto mapToDetailDto(JobPosting jobPosting) {
+        UUID applicationId = applicationRepository.findApplicationIdByJobPostingId(jobPosting.getId())
+                .orElse(null);
+
+        return jobPostingMapper.toDetailDto(jobPosting, applicationId);
     }
 }

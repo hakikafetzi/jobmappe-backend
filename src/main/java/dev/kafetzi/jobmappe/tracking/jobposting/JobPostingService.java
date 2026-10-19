@@ -9,8 +9,8 @@ import java.util.UUID;
 public interface JobPostingService {
     Page<JobPostingCompactDto> getAllJobPostings(String q, JobPostingFilter filter, Pageable pageable);
     JobPostingDetailDto getJobPosting(UUID postingId);
-    JobPostingResponseDto createJobPosting(UUID companyId, JobPostingRequestDto jobPostingRequestDto);
-    JobPostingResponseDto updateJobPosting(UUID id, JobPostingRequestDto jobPostingRequestDto);
+    JobPostingDetailDto createJobPosting(UUID companyId, JobPostingRequestDto jobPostingRequestDto);
+    JobPostingDetailDto updateJobPosting(UUID id, JobPostingRequestDto jobPostingRequestDto);
     Page<JobPostingCompactDto> getAllJobPostingsByCompanyId(UUID companyId, Pageable pageable);
-    JobPostingResponseDto setArchived(UUID id, JobPostingArchiveDto jobPostingArchiveDto);
+    JobPostingDetailDto setArchived(UUID id, JobPostingArchiveDto jobPostingArchiveDto);
 }

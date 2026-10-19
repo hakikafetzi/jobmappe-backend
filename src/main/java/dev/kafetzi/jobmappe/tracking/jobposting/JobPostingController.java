@@ -43,21 +43,21 @@ public class JobPostingController {
     }
 
     @PutMapping("/api/job-postings/{id}")
-    public ResponseEntity<JobPostingResponseDto> updateJobPosting(
+    public ResponseEntity<JobPostingDetailDto> updateJobPosting(
             @PathVariable UUID id,
             @Valid @RequestBody JobPostingRequestDto jobPostingRequestDto
             ) {
-        JobPostingResponseDto jobPosting = jobPostingService.updateJobPosting(id, jobPostingRequestDto);
+        JobPostingDetailDto jobPosting = jobPostingService.updateJobPosting(id, jobPostingRequestDto);
 
         return ResponseEntity.ok(jobPosting);
     }
 
     @PostMapping("/api/companies/{companyId}/job-postings")
-    public ResponseEntity<JobPostingResponseDto> createJobPosting(
+    public ResponseEntity<JobPostingDetailDto> createJobPosting(
             @PathVariable UUID companyId,
             @Valid @RequestBody JobPostingRequestDto jobPostingRequestDto
     ) {
-        JobPostingResponseDto jobPosting = jobPostingService.createJobPosting(companyId, jobPostingRequestDto);
+        JobPostingDetailDto jobPosting = jobPostingService.createJobPosting(companyId, jobPostingRequestDto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -83,11 +83,11 @@ public class JobPostingController {
     }
 
     @PatchMapping("/api/job-postings/{id}/archive")
-    public ResponseEntity<JobPostingResponseDto> setArchived(
+    public ResponseEntity<JobPostingDetailDto> setArchived(
             @PathVariable UUID id,
             @Valid @RequestBody JobPostingArchiveDto jobPostingArchiveDto
     ) {
-        JobPostingResponseDto jobPosting = jobPostingService.setArchived(id, jobPostingArchiveDto);
+        JobPostingDetailDto jobPosting = jobPostingService.setArchived(id, jobPostingArchiveDto);
 
         return ResponseEntity.ok(jobPosting);
     }

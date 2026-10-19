@@ -77,8 +77,6 @@ public class JobPostingMapperImpl implements JobPostingMapper {
 
     @Override
     public void updateEntityFromDto(JobPostingRequestDto jobPostingRequestDto, JobPosting jobPosting) {
-        if (jobPostingRequestDto == null || jobPosting == null) return;
-
         jobPosting.setTitle(jobPostingRequestDto.title());
         jobPosting.setDescription(jobPostingRequestDto.description());
         jobPosting.setLocation(jobPostingRequestDto.location());

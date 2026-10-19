@@ -49,8 +49,6 @@ public class NoteMapperImpl implements NoteMapper {
 
     @Override
     public void updateEntityFromDto(NoteRequestDto noteRequestDto, Note note) {
-        if (noteRequestDto == null || note == null) return;
-
         note.setTitle(noteRequestDto.title());
         note.setContent(noteRequestDto.content());
     }

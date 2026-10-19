@@ -58,8 +58,6 @@ public class CompanyMapperImpl implements CompanyMapper {
 
     @Override
     public void updateEntityFromDto(CompanyRequestDto companyRequestDto, Company company) {
-        if (companyRequestDto == null || company == null) return;
-
         company.setName(companyRequestDto.name());
         company.setWebsite(companyRequestDto.website());
         company.setStreet(companyRequestDto.street());

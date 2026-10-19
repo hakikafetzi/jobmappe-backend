@@ -27,8 +27,6 @@ public class NoteCategoryMapperImpl implements NoteCategoryMapper {
 
     @Override
     public void updateEntityFromDto(NoteCategoryRequestDto noteCategoryRequestDto, NoteCategory noteCategory) {
-        if (noteCategory == null || noteCategoryRequestDto == null) return;
-
         noteCategory.setName(noteCategoryRequestDto.name());
     }
 }

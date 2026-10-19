@@ -1,14 +1,13 @@
 package dev.kafetzi.jobmappe.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException exception) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
@@ -37,8 +36,13 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    @Override
+    protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode status,
+            @NonNull WebRequest request
+    ) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
 
         problemDetail.setTitle("Validation failed");
@@ -46,41 +50,18 @@ public class GlobalExceptionHandler {
 
         Map<String, List<String>> errors = new LinkedHashMap<>();
 
-        exception.getBindingResult()
+        ex.getBindingResult()
                 .getFieldErrors()
                 .forEach(error ->
-                                errors.computeIfAbsent(
-                                        error.getField(),
-                                        key -> new ArrayList<>()
-                                ).add(error.getDefaultMessage())
+                        errors.computeIfAbsent(
+                                error.getField(),
+                                key -> new ArrayList<>()
+                        ).add(error.getDefaultMessage())
                 );
-
 
         problemDetail.setProperty("errors", errors);
 
-        return problemDetail;
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ProblemDetail handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-
-        problemDetail.setTitle("Invalid request body");
-        problemDetail.setDetail("The request body is malformed or contains invalid values.");
-
-        return problemDetail;
-    }
-
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ProblemDetail handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-
-        problemDetail.setTitle("Invalid request parameter");
-        problemDetail.setDetail(
-                "The request contains an invalid value for '" + exception.getName() + "'."
-        );
-
-        return problemDetail;
+        return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
     }
 
     @ExceptionHandler(InvalidSortPropertyException.class)
@@ -99,19 +80,6 @@ public class GlobalExceptionHandler {
 
         problemDetail.setTitle("Invalid request combination");
         problemDetail.setDetail(exception.getMessage());
-
-        return problemDetail;
-    }
-
-    @ExceptionHandler({
-            NoHandlerFoundException.class,
-            NoResourceFoundException.class
-    })
-    public ProblemDetail handleEndpointNotFoundException(Exception exception) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-
-        problemDetail.setTitle("Endpoint not found");
-        problemDetail.setDetail("The requested endpoint does not exist.");
 
         return problemDetail;
     }

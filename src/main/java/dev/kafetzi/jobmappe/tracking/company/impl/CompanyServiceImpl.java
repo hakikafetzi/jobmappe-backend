@@ -76,7 +76,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional
-    public CompanyResponseDto createCompany(CompanyRequestDto requestDto) {
+    public CompanyDetailDto createCompany(CompanyRequestDto requestDto) {
         Company company = companyMapper.toEntity(requestDto);
         String normalizedCompanyName = company.getName().strip();
 
@@ -89,12 +89,12 @@ public class CompanyServiceImpl implements CompanyService {
         company.setName(normalizedCompanyName);
         Company newCompany = companyRepository.save(company);
 
-        return companyMapper.toDto(newCompany);
+        return companyMapper.toDetailDto(newCompany, 0);
     }
 
     @Override
     @Transactional
-    public CompanyResponseDto updateCompany(UUID id, CompanyRequestDto requestDto) {
+    public CompanyDetailDto updateCompany(UUID id, CompanyRequestDto requestDto) {
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Company with id " + id + " was not found."
@@ -112,6 +112,8 @@ public class CompanyServiceImpl implements CompanyService {
         companyMapper.updateEntityFromDto(requestDto, company);
         company.setName(normalizedRequestName);
 
-        return companyMapper.toDto(company);
+        long jobCount = jobPostingRepository.countJobPostingsByCompanyId(company.getId());
+
+        return companyMapper.toDetailDto(company, jobCount);
     }
 }

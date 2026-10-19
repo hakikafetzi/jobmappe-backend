@@ -3,7 +3,6 @@ package dev.kafetzi.jobmappe.tracking.company;
 import dev.kafetzi.jobmappe.common.pagination.PagedResponse;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyCompactDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyDetailDto;
-import dev.kafetzi.jobmappe.tracking.company.dto.CompanyResponseDto;
 import dev.kafetzi.jobmappe.tracking.company.dto.CompanyRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,9 +46,9 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<CompanyResponseDto> createCompany(
+    public ResponseEntity<CompanyDetailDto> createCompany(
             @Valid @RequestBody CompanyRequestDto companyRequestDto) {
-        CompanyResponseDto company = companyService.createCompany(companyRequestDto);
+        CompanyDetailDto company = companyService.createCompany(companyRequestDto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -61,11 +60,11 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompanyResponseDto> updateCompany(
+    public ResponseEntity<CompanyDetailDto> updateCompany(
             @PathVariable UUID id,
             @Valid @RequestBody CompanyRequestDto companyRequestDto
     ){
-        CompanyResponseDto company = companyService.updateCompany(id, companyRequestDto);
+        CompanyDetailDto company = companyService.updateCompany(id, companyRequestDto);
 
         return ResponseEntity.ok(company);
     }

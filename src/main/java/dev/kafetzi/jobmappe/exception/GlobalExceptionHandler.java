@@ -1,5 +1,6 @@
 package dev.kafetzi.jobmappe.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,10 +16,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException exception) {
+        log.debug("Resource not found: {}", exception.getMessage());
+
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
 
         problemDetail.setTitle("Resource not found");
@@ -29,6 +33,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConflictException.class)
     public ProblemDetail handleConflictException(ConflictException exception) {
+        log.debug("Conflict occurred: {}", exception.getMessage());
+
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
 
         problemDetail.setTitle("Conflict");
@@ -39,6 +45,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
+        log.warn("Data integrity violation: {}", exception.getMessage());
+
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
 
         problemDetail.setTitle("Conflict");
@@ -72,11 +80,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         problemDetail.setProperty("errors", errors);
 
+        log.debug("Validation failed: {}", errors);
+
         return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
     }
 
     @ExceptionHandler(InvalidSortPropertyException.class)
     public ProblemDetail handleInvalidSortPropertyException(InvalidSortPropertyException exception) {
+        log.debug("Invalid sort property: {}", exception.getMessage());
+
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
 
         problemDetail.setTitle("Invalid sort property");
@@ -87,6 +99,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidRequestException.class)
     public ProblemDetail handleInvalidRequestException(InvalidRequestException exception) {
+        log.debug("Invalid request combination: {}", exception.getMessage());
+
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
 
         problemDetail.setTitle("Invalid request combination");
@@ -97,6 +111,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleUnexpectedException(Exception exception) {
+        log.error("Unexpected error occurred", exception);
+
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 
         problemDetail.setTitle("Internal server error");

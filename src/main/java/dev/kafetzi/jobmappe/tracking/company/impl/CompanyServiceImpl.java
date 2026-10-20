@@ -12,6 +12,7 @@ import dev.kafetzi.jobmappe.tracking.company.CompanyRepository;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
 import dev.kafetzi.jobmappe.tracking.company.CompanyService;
 import dev.kafetzi.jobmappe.tracking.jobposting.projection.CountByCompanyProjection;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
@@ -85,6 +87,7 @@ public class CompanyServiceImpl implements CompanyService {
         }
 
         Company newCompany = companyRepository.save(company);
+        log.info("Company {} created", newCompany.getId());
 
         return companyMapper.toDetailDto(newCompany, 0);
     }
@@ -105,6 +108,8 @@ public class CompanyServiceImpl implements CompanyService {
         }
 
         companyMapper.updateEntityFromDto(requestDto, company);
+        log.info("Company {} updated", company.getId());
+
         long jobCount = jobPostingRepository.countJobPostingsByCompanyId(company.getId());
 
         return companyMapper.toDetailDto(company, jobCount);

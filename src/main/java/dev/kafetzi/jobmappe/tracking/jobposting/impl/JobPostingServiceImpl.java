@@ -11,6 +11,7 @@ import dev.kafetzi.jobmappe.tracking.application.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.company.CompanyRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JobPostingServiceImpl implements JobPostingService {
@@ -58,8 +60,8 @@ public class JobPostingServiceImpl implements JobPostingService {
                 );
 
         JobPosting jobPosting = jobPostingMapper.toEntity(jobPostingRequestDto, company);
-
         JobPosting jobPostingSaved = jobPostingRepository.save(jobPosting);
+        log.info("Job posting {} created", jobPostingSaved.getId());
 
         return jobPostingMapper.toDetailDto(jobPostingSaved, null);
     }
@@ -85,7 +87,8 @@ public class JobPostingServiceImpl implements JobPostingService {
                 );
 
         jobPostingMapper.updateEntityFromDto(jobPostingRequestDto, jobPosting);
-
+        log.info("Job posting {} updated", jobPosting.getId());
+        
         return mapToDetailDto(jobPosting);
     }
 
@@ -121,8 +124,10 @@ public class JobPostingServiceImpl implements JobPostingService {
 
         if (jobPostingArchiveDto.archived()) {
             jobPosting.archive();
+            log.info("Job posting {} archived", jobPosting.getId());
         } else {
             jobPosting.restore();
+            log.info("Job posting {} restored", jobPosting.getId());
         }
 
         return mapToDetailDto(jobPosting);

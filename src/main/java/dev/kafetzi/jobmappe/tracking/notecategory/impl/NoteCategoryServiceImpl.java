@@ -8,6 +8,7 @@ import dev.kafetzi.jobmappe.tracking.notecategory.dto.NoteCategoryRequestDto;
 import dev.kafetzi.jobmappe.tracking.notecategory.dto.NoteCategoryDto;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategoryRepository;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NoteCategoryServiceImpl implements NoteCategoryService {
@@ -54,6 +56,7 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
         }
 
         NoteCategory newNoteCategory = noteCategoryRepository.save(noteCategory);
+        log.info("Note category {} created", newNoteCategory.getId());
 
         return noteCategoryMapper.toDto(newNoteCategory);
     }
@@ -74,6 +77,7 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
         }
 
         noteCategoryMapper.updateEntityFromDto(noteCategoryRequestDto, noteCategory);
+        log.info("Note category {} updated", noteCategory.getId());
 
         return noteCategoryMapper.toDto(noteCategory);
     }
@@ -88,5 +92,6 @@ public class NoteCategoryServiceImpl implements NoteCategoryService {
                 );
 
         noteCategoryRepository.delete(noteCategory);
+        log.info("Note category {} deleted", noteCategory.getId());
     }
 }

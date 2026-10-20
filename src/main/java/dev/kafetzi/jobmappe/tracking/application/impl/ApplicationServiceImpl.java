@@ -10,6 +10,7 @@ import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationDetailDto;
 import dev.kafetzi.jobmappe.tracking.application.dto.ApplicationPatchDto;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPosting;
 import dev.kafetzi.jobmappe.tracking.jobposting.JobPostingRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
@@ -73,8 +75,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
 
         Application application = new Application(jobPosting);
-
         Application savedApplication = applicationRepository.save(application);
+        log.info("Application {} started", savedApplication.getId());
 
         return applicationMapper.toDetailDto(savedApplication);
     }
@@ -112,7 +114,10 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
 
         if (applicationPatchDto.status() != null) {
+            var currentStatus = application.getStatus();
             application.changeStatus(applicationPatchDto.status());
+            log.info("Application {} status changed from {} to {}",
+                    application.getId(), currentStatus, applicationPatchDto.status());
         }
 
         return applicationMapper.toDetailDto(application);

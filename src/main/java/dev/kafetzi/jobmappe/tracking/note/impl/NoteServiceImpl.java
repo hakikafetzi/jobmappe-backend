@@ -14,6 +14,7 @@ import dev.kafetzi.jobmappe.tracking.application.ApplicationRepository;
 import dev.kafetzi.jobmappe.tracking.notecategory.NoteCategoryRepository;
 import dev.kafetzi.jobmappe.tracking.note.NoteRepository;
 import dev.kafetzi.jobmappe.tracking.note.NoteService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService {
@@ -89,6 +91,7 @@ public class NoteServiceImpl implements NoteService {
         }
 
         Note savedNote = noteRepository.save(note);
+        log.info("Note {} created", savedNote.getId());
 
         return noteMapper.toDetailDto(savedNote);
     }
@@ -125,6 +128,7 @@ public class NoteServiceImpl implements NoteService {
         }
 
         noteMapper.updateEntityFromDto(noteRequestDto, note);
+        log.info("Note {} updated", note.getId());
 
         return noteMapper.toDetailDto(note);
     }
@@ -139,5 +143,6 @@ public class NoteServiceImpl implements NoteService {
                 );
 
         noteRepository.delete(note);
+        log.info("Note {} deleted", note.getId());
     }
 }

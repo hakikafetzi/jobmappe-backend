@@ -29,6 +29,6 @@ class CompanyRepositoryTest {
 
         assertThatThrownBy(() -> companyRepository.saveAndFlush(duplicate))
                 .isInstanceOf(DataIntegrityViolationException.class)
-                .rootCause().hasMessageContaining("ux_companies_name");;
+                .rootCause().hasMessageContaining("ux_companies_name");
     }
 }

@@ -3,19 +3,19 @@ package dev.kafetzi.jobmappe.tracking.application;
 import java.util.EnumSet;
 
 public enum ApplicationStatus {
-    // laufend — auf dem Board
-    IN_PROGRESS,   // In Bearbeitung
-    APPLIED,       // Beworben
-    WAITING,       // Warten
-    INTERVIEW,     // Gespräch
-    OFFER,         // Zusage erhalten
+    // Active: shown on the board
+    IN_PROGRESS,
+    APPLIED,
+    WAITING,
+    INTERVIEW,
+    OFFER,
 
-    // abgeschlossen — im Behälter
-    OFFER_ACCEPTED, // Zusage angenommen
-    OFFER_REJECTED, // Zusage abgelehnt
-    REJECTED,       // Absage
-    WITHDRAWN,      // Zurückgezogen
-    NO_RESPONSE;     // Keine Rückmeldung
+    // Closed: moved out of the board
+    OFFER_ACCEPTED,
+    OFFER_REJECTED,
+    REJECTED,
+    WITHDRAWN,
+    NO_RESPONSE;
 
     public boolean canTransitionTo(ApplicationStatus newStatus) {
         return switch (this) {

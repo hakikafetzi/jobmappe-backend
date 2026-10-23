@@ -3,13 +3,14 @@ package dev.kafetzi.jobmappe.common.config;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
     @Bean
-    public OpenAPI jobMappeOpenApi() {
+    public OpenAPI jobMappeOpenApi(BuildProperties buildProperties) {
         return new OpenAPI().info(new Info()
                 .title("JobMappe API")
                 .description("""
@@ -17,7 +18,7 @@ public class OpenApiConfig {
                         Job postings, companies, applications and notes in one place, from the first draft to 
                         the final answer.
                         """)
-                .version("0.1.0")
+                .version(buildProperties.getVersion())
                 .license(new License()
                         .name("MIT License")
                         .url("https://opensource.org/licenses/MIT")));

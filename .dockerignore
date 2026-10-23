@@ -1,0 +1,32 @@
+# Build output (the image builds its own)
+target/
+
+# Git and CI
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# IDE and OS files
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.DS_Store
+
+# Environment files (may contain secrets)
+.env
+.env.*
+
+# Docker and local dev setup
+Dockerfile
+.dockerignore
+docker-compose.yaml
+
+# Documentation
+*.md
+LICENSE
+
+# Logs
+*.log

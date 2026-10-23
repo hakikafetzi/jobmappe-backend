@@ -1,7 +1,9 @@
 # syntax=docker/dockerfile:1
 
 # ---- Build stage ----
-FROM eclipse-temurin:21-jdk AS build
+# Runs natively on the build machine: the jar is platform-independent,
+# so only the runtime stage needs to match the target platform.
+FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS build
 WORKDIR /workspace
 
 # Maven wrapper and pom first (change rarely)

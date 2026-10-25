@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,7 +41,7 @@ public class JobPostingController {
     public ResponseEntity<PagedResponse<JobPostingCompactDto>> getAllJobPostings(
             @RequestParam(name = "q", defaultValue = "") String q,
             @RequestParam(name = "filter", defaultValue = "ALL") JobPostingFilter filter,
-            @SortDefault(
+            @ParameterObject @SortDefault(
                     sort = {"createdAt", "id"},
                     direction = Sort.Direction.DESC
             )
@@ -109,7 +110,7 @@ public class JobPostingController {
     @GetMapping("/api/companies/{companyId}/job-postings")
     public ResponseEntity<PagedResponse<JobPostingCompactDto>> getAllJobPostingsByCompany(
             @PathVariable UUID companyId,
-            @SortDefault(
+            @ParameterObject @SortDefault(
                     sort = {"createdAt", "id"},
                     direction = Sort.Direction.DESC
             )

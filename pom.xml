@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>dev.kafetzi</groupId>
 	<artifactId>jobmappe</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>JobMappe</name>
 	<description>
 		A job-application tracker for the German job market -

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,7 +42,7 @@ public class NoteController {
             @RequestParam(name = "q", defaultValue = "") String q,
             @RequestParam(name = "noteCategoryId", required = false) UUID noteCategoryId,
             @RequestParam(name = "applicationId", required = false) UUID applicationId,
-            @SortDefault(
+            @ParameterObject @SortDefault(
                     sort = {"createdAt", "id"},
                     direction = Sort.Direction.DESC
             )
